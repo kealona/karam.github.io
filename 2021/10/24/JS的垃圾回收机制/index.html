@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hans">
+
+<head>
+    
+    <title>JS的垃圾回收机制 - Karam</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="垃圾回收分为自动回收和手动回收两种策略 调用栈中数据是怎么回收的JS引擎会通过向下移动ESP来销毁该函数保存在栈中的执行上下文，下一次执行的时候，这段上下文已经无效了，直接被覆盖 调用堆中的数据是怎么回收的使用到JS的垃圾回收器 代际假说和分代回收特点：  大部分对象在内存中存在的时间很短 不死对象，存在时间长  JS把堆内存分为两块，一块是新生代，一块是老年代。新生代用来存在内存中存在时间短的对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS的垃圾回收机制">
+<meta property="og:url" content="http://example.com/2021/10/24/JS%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="Karam">
+<meta property="og:description" content="垃圾回收分为自动回收和手动回收两种策略 调用栈中数据是怎么回收的JS引擎会通过向下移动ESP来销毁该函数保存在栈中的执行上下文，下一次执行的时候，这段上下文已经无效了，直接被覆盖 调用堆中的数据是怎么回收的使用到JS的垃圾回收器 代际假说和分代回收特点：  大部分对象在内存中存在的时间很短 不死对象，存在时间长  JS把堆内存分为两块，一块是新生代，一块是老年代。新生代用来存在内存中存在时间短的对">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-10-24T07:56:23.000Z">
+<meta property="article:modified_time" content="2021-12-27T03:08:29.000Z">
+<meta property="article:author" content="Karam">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="垃圾回收">
+<meta name="twitter:card" content="summary">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/highlight.js@9.15.8/styles/atom-one-dark.css,npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css,gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css,npm/hexo-theme-nexmoe@latest/source/lib/mdui_043tiny/css/mdui.css,npm/hexo-theme-nexmoe@latest/source/lib/iconfont/iconfont.css?v=233" crossorigin>
+    <link rel="stylesheet" href="/css/style.css?v=1650762693415">
+     
+    
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1650762693415">
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="mdui-drawer-body-left">
+    
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg)"></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Karam" class="mdui-btn mdui-btn-icon"><img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/avatar.png" alt="Karam"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Karam">
+            <img src="https://avatars.githubusercontent.com/u/71165769?v=4" alt="Karam" alt="Karam">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>Articles</span>61</div>
+        <div><span>Tags</span>43</div>
+        <div><span>Categories</span>13</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+    
+    <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:nexmoe.com" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="Search"></label>
+            </form>
+         
+    </div>
+</div>
+    
+    
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Categories</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/CSS/">CSS</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ES6/">ES6</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ElementUI源码/">ElementUI源码</a>
+          <span class="category-list-count">2</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/JavaScript/">JavaScript</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Vue/">Vue</a>
+          <span class="category-list-count">6</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/npm/">npm</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/优化/">优化</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/客户端/">客户端</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/性能优化/">性能优化</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/浏览器/">浏览器</a>
+          <span class="category-list-count">21</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/计算机网络/">计算机网络</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/项目复盘/">项目复盘</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/风格指南/">风格指南</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BFC/" style="font-size: 10px;">BFC</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Chrome/" style="font-size: 16.25px;">Chrome</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 11.25px;">ES6</a> <a href="/tags/Element/" style="font-size: 11.25px;">Element</a> <a href="/tags/HTTP/" style="font-size: 13.75px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 18.75px;">JavaScript</a> <a href="/tags/JavaScript-%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">JavaScript 浏览器</a> <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/JavsScript/" style="font-size: 10px;">JavsScript</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/URL/" style="font-size: 10px;">URL</a> <a href="/tags/V8/" style="font-size: 12.5px;">V8</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/Vue-router/" style="font-size: 11.25px;">Vue-router</a> <a href="/tags/Vuex/" style="font-size: 10px;">Vuex</a> <a href="/tags/css/" style="font-size: 11.25px;">css</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">七层模型</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 16.25px;">优化</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/" style="font-size: 10px;">原型链</a> <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" style="font-size: 10px;">垃圾回收</a> <a href="/tags/%E5%AE%9A%E6%97%B6%E5%99%A8/" style="font-size: 10px;">定时器</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 11.25px;">实现</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/" style="font-size: 10px;">客户端存储</a> <a href="/tags/%E5%BC%82%E6%AD%A5/" style="font-size: 10px;">异步</a> <a href="/tags/%E5%BC%95%E6%93%8E/" style="font-size: 10px;">引擎</a> <a href="/tags/%E6%87%92%E5%8A%A0%E8%BD%BD/" style="font-size: 10px;">懒加载</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 20px;">浏览器</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">浏览器安全</a> <a href="/tags/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">混杂模式</a> <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 11.25px;">渲染</a> <a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 11.25px;">源码</a> <a href="/tags/%E7%BB%84%E4%BB%B6/" style="font-size: 11.25px;">组件</a> <a href="/tags/%E7%BB%84%E4%BB%B6%E5%8C%96/" style="font-size: 10px;">组件化</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 10px;">缓存</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" style="font-size: 10px;">编译器</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 13.75px;">计算机网络</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 15px;">计网</a> <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" style="font-size: 11.25px;">项目复盘</a> <a href="/tags/%E9%A6%96%E5%B1%8F%E6%97%B6%E9%97%B4/" style="font-size: 12.5px;">首屏时间</a>
+    </div>
+    
+  </div>
+
+    
+</aside>
+    <div class="nexmoe-copyright">
+        &copy; 2022 Karam
+        Powered by 
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+            <div class="nexmoe-post">
+
+  <article>
+      
+          <div class="nexmoe-post-cover" style="padding-bottom: 62.5%;"> 
+              <img src="https://image-static.segmentfault.com/359/593/3595939355-5c932ad1e5d2d_fix732" data-sizes="auto" alt="JS的垃圾回收机制">
+              <h1>JS的垃圾回收机制</h1>
+          </div>
+      
+      
+      <div class="nexmoe-post-meta nexmoe-rainbow" style="margin:10px 0!important;">
+    <a><i class="nexmoefont icon-calendar-fill"></i>2021年10月24日</a>
+    <a><i class="nexmoefont icon-areachart"></i>998 字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>大概 4 分钟</a>
+</div>
+
+      
+
+      <p>垃圾回收分为自动回收和手动回收两种策略</p>
+<h3 id="调用栈中数据是怎么回收的"><a href="#调用栈中数据是怎么回收的" class="headerlink" title="调用栈中数据是怎么回收的"></a>调用栈中数据是怎么回收的</h3><p>JS引擎会通过向下移动ESP来销毁该函数保存在栈中的执行上下文，下一次执行的时候，这段上下文已经无效了，直接被覆盖</p>
+<h1 id="调用堆中的数据是怎么回收的"><a href="#调用堆中的数据是怎么回收的" class="headerlink" title="调用堆中的数据是怎么回收的"></a>调用堆中的数据是怎么回收的</h1><p>使用到JS的垃圾回收器</p>
+<h2 id="代际假说和分代回收"><a href="#代际假说和分代回收" class="headerlink" title="代际假说和分代回收"></a>代际假说和分代回收</h2><p>特点：</p>
+<ul>
+<li>大部分对象在内存中存在的时间很短</li>
+<li>不死对象，存在时间长</li>
+</ul>
+<p>JS把堆内存分为两块，一块是新生代，一块是老年代。新生代用来存在内存中存在时间短的对象；老年代用来存那些存在时间比较长的对象<br>新生代通常只占1~8M的内存，老年代的容量比较大<br>对于这两块区域，分别使用两种不同的垃圾回收器：</p>
+<ul>
+<li><strong>副垃圾回收器：</strong> 负责新生代垃圾的回收</li>
+<li><strong>主垃圾回收器：</strong> 负责老年代垃圾的回收</li>
+</ul>
+<p><strong>分代回收</strong><br>对象分为两组，老年代和新生代，如果对象存在时间够久就放入老年代中</p>
+<h3 id="垃圾回收的流程"><a href="#垃圾回收的流程" class="headerlink" title="垃圾回收的流程"></a>垃圾回收的流程</h3><ol>
+<li>标记内存中活动对象和非活动对象</li>
+<li>清除非活动对象占据的内存</li>
+<li>内存整理，当内存被回收的时候，会造成很多不连续的内存碎片，如果需要分配连续较大的内存，就会有内存不足问题，这一步就是将内存碎片整理起来，这一步可选</li>
+</ol>
+<h4 id="副垃圾回收器的回收流程"><a href="#副垃圾回收器的回收流程" class="headerlink" title="副垃圾回收器的回收流程"></a>副垃圾回收器的回收流程</h4><p>副垃圾回收器主要负责回收新生代的垃圾，新生代回收使用<strong>Scavenge算法</strong>，把新生代空间分为对象区，和空闲区，当对象区域快满的时候，执行一次垃圾清理操作。<br>清理的过程是，先标记活动对象和非活动对象，然后把非活动对象回收清理掉，剩下的内存碎片（存活的对象）整理然后复制到空闲区，最后两个区域调换，以此重复使用<br>因为每次复制存活对象需要时间成本，所以新生代的空间容量比较小。<br><strong>对象晋升策略：</strong> 如果两次垃圾回收依然存活的对象会被放到老年代中去</p>
+<h4 id="主垃圾回收器的回收流程"><a href="#主垃圾回收器的回收流程" class="headerlink" title="主垃圾回收器的回收流程"></a>主垃圾回收器的回收流程</h4><p>主垃圾回收器主要负责回收老年代的垃圾，老年代中的对象有两个特点，一个是对象占内存较多，一个是存活时间长。如果主垃圾回收器也采用scavenge算法回收对象，那么每次复制都需要很长时间，执行效率不高，而且浪费一半的空间，所以主垃圾回收器主要采用<strong>标记-清除</strong>算法进行垃圾回收<br>首先是标记阶段，标记活着的对象，从一组的根元素开始递归遍历这组元素，如果能到达说明是活动元素，否则视为垃圾数据<br>然后是清除阶段，没有被标记的元素会被回收清理，针对碎片内存，采用<strong>标记-整理</strong>算法</p>
+<h3 id="全停顿"><a href="#全停顿" class="headerlink" title="全停顿"></a>全停顿</h3><p>V8使用副垃圾回收器和主回收垃圾器回收垃圾，由于JS单线程，所以一旦执行垃圾回收算法，就要停顿当前的JS脚本，待垃圾回收完再执行，这个过程叫做全停顿<br>新生代的回收是比较快的，但是老生代因为对象比较大，且内存比较大，回收占比较多的时间，所以为老生代增加一个算法<strong>增量标记算法</strong>，同时让子标记和JS应用逻辑交替进行，使用增量标记算法把整个垃圾回收任务拆分成多个小任务，和JS应用逻辑交替执行</p>
+
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+    
+        <a class="nexmoefont icon-appstore-fill -link" href="/categories/JavaScript/">JavaScript</a>
+    
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/JavaScript/" rel="tag">JavaScript</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="tag">垃圾回收</a>
+    
+</div>
+
+  
+      <div class="nexmoe-post-footer">
+          <section class="nexmoe-comment">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+<div id="gitalk"></div>
+<script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: '80b2453b6d5f37ad6225',
+        clientSecret: '43e99fa852795c9a7b3eb924b2558c64b84bbdeb',
+        id: window.location.pathname,
+        repo: 'nexmoe.github.io',
+        owner: 'nexmoe',
+        admin: 'nexmoe'
+    })
+    gitalk.render('gitalk')
+</script>
+</section>
+      </div>
+  
+</div>
+            <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="回到顶部" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hans">
+
+<head>
+    
+    <title>代码规范 - Karam</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="风格指南必要的风格  组件名应该为多个单词，可以避免以后和HTML元素冲突 对于组件的数据，必须是一个函数，它的值必须是一个返回对象的函数。如果不适用函数返回，那所有的组件实例都共享一个引用，也就是重复使用，这时候如果引用处修改了数据，那么所有数都会修改 prop的定义应该详细，这样即方便后期开发的时候看懂代码，也不会引起Vue报错 为v-for设置键值，设置键值以后，vue渲染dom的时候就会把">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码规范">
+<meta property="og:url" content="http://example.com/2021/08/20/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/index.html">
+<meta property="og:site_name" content="Karam">
+<meta property="og:description" content="风格指南必要的风格  组件名应该为多个单词，可以避免以后和HTML元素冲突 对于组件的数据，必须是一个函数，它的值必须是一个返回对象的函数。如果不适用函数返回，那所有的组件实例都共享一个引用，也就是重复使用，这时候如果引用处修改了数据，那么所有数都会修改 prop的定义应该详细，这样即方便后期开发的时候看懂代码，也不会引起Vue报错 为v-for设置键值，设置键值以后，vue渲染dom的时候就会把">
+<meta property="og:locale">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/60a2628858b04e8390d03b5c0bf75d29.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ4ODg2Njky,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2021-08-20T07:56:54.000Z">
+<meta property="article:modified_time" content="2021-12-27T03:27:02.000Z">
+<meta property="article:author" content="Karam">
+<meta property="article:tag" content="CSS">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="Vuex">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/60a2628858b04e8390d03b5c0bf75d29.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ4ODg2Njky,size_16,color_FFFFFF,t_70">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/highlight.js@9.15.8/styles/atom-one-dark.css,npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css,gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css,npm/hexo-theme-nexmoe@latest/source/lib/mdui_043tiny/css/mdui.css,npm/hexo-theme-nexmoe@latest/source/lib/iconfont/iconfont.css?v=233" crossorigin>
+    <link rel="stylesheet" href="/css/style.css?v=1650762693433">
+     
+    
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1650762693433">
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="mdui-drawer-body-left">
+    
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg)"></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Karam" class="mdui-btn mdui-btn-icon"><img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/avatar.png" alt="Karam"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Karam">
+            <img src="https://avatars.githubusercontent.com/u/71165769?v=4" alt="Karam" alt="Karam">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>Articles</span>61</div>
+        <div><span>Tags</span>43</div>
+        <div><span>Categories</span>13</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+    
+    <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:nexmoe.com" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="Search"></label>
+            </form>
+         
+    </div>
+</div>
+    
+    
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Categories</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/CSS/">CSS</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ES6/">ES6</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ElementUI源码/">ElementUI源码</a>
+          <span class="category-list-count">2</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/JavaScript/">JavaScript</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Vue/">Vue</a>
+          <span class="category-list-count">6</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/npm/">npm</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/优化/">优化</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/客户端/">客户端</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/性能优化/">性能优化</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/浏览器/">浏览器</a>
+          <span class="category-list-count">21</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/计算机网络/">计算机网络</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/项目复盘/">项目复盘</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/风格指南/">风格指南</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BFC/" style="font-size: 10px;">BFC</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Chrome/" style="font-size: 16.25px;">Chrome</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 11.25px;">ES6</a> <a href="/tags/Element/" style="font-size: 11.25px;">Element</a> <a href="/tags/HTTP/" style="font-size: 13.75px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 18.75px;">JavaScript</a> <a href="/tags/JavaScript-%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">JavaScript 浏览器</a> <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/JavsScript/" style="font-size: 10px;">JavsScript</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/URL/" style="font-size: 10px;">URL</a> <a href="/tags/V8/" style="font-size: 12.5px;">V8</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/Vue-router/" style="font-size: 11.25px;">Vue-router</a> <a href="/tags/Vuex/" style="font-size: 10px;">Vuex</a> <a href="/tags/css/" style="font-size: 11.25px;">css</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">七层模型</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 16.25px;">优化</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/" style="font-size: 10px;">原型链</a> <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" style="font-size: 10px;">垃圾回收</a> <a href="/tags/%E5%AE%9A%E6%97%B6%E5%99%A8/" style="font-size: 10px;">定时器</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 11.25px;">实现</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/" style="font-size: 10px;">客户端存储</a> <a href="/tags/%E5%BC%82%E6%AD%A5/" style="font-size: 10px;">异步</a> <a href="/tags/%E5%BC%95%E6%93%8E/" style="font-size: 10px;">引擎</a> <a href="/tags/%E6%87%92%E5%8A%A0%E8%BD%BD/" style="font-size: 10px;">懒加载</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 20px;">浏览器</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">浏览器安全</a> <a href="/tags/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">混杂模式</a> <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 11.25px;">渲染</a> <a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 11.25px;">源码</a> <a href="/tags/%E7%BB%84%E4%BB%B6/" style="font-size: 11.25px;">组件</a> <a href="/tags/%E7%BB%84%E4%BB%B6%E5%8C%96/" style="font-size: 10px;">组件化</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 10px;">缓存</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" style="font-size: 10px;">编译器</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 13.75px;">计算机网络</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 15px;">计网</a> <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" style="font-size: 11.25px;">项目复盘</a> <a href="/tags/%E9%A6%96%E5%B1%8F%E6%97%B6%E9%97%B4/" style="font-size: 12.5px;">首屏时间</a>
+    </div>
+    
+  </div>
+
+    
+</aside>
+    <div class="nexmoe-copyright">
+        &copy; 2022 Karam
+        Powered by 
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+            <div class="nexmoe-post">
+
+  <article>
+      
+          <div class="nexmoe-post-cover" style="padding-bottom: 62.5%;"> 
+              <img src="https://cn.vuejs.org/images/logo.svg" data-sizes="auto" alt="代码规范">
+              <h1>代码规范</h1>
+          </div>
+      
+      
+      <div class="nexmoe-post-meta nexmoe-rainbow" style="margin:10px 0!important;">
+    <a><i class="nexmoefont icon-calendar-fill"></i>2021年08月20日</a>
+    <a><i class="nexmoefont icon-areachart"></i>881 字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>大概 3 分钟</a>
+</div>
+
+      
+
+      <h2 id="风格指南"><a href="#风格指南" class="headerlink" title="风格指南"></a>风格指南</h2><p><strong>必要的风格</strong></p>
+<ol>
+<li>组件名应该为多个单词，可以避免以后和HTML元素冲突</li>
+<li>对于组件的数据，必须是一个函数，它的值必须是一个返回对象的函数。如果不适用函数返回，那所有的组件实例都共享一个引用，也就是重复使用，这时候如果引用处修改了数据，那么所有数都会修改</li>
+<li>prop的定义应该详细，这样即方便后期开发的时候看懂代码，也不会引起Vue报错</li>
+<li>为v-for设置键值，设置键值以后，vue渲染dom的时候就会把dom的变更降到最低</li>
+<li>避免v-if和v-for一起使用，以为vue处理这两个命令的时候，v-for的优先级是高于v-if的，这就导致每次都要渲染完再判断v-if里面的内容，我们可以放在计算属性里面，或者移步到上层</li>
+<li>为组件样式设置作用域，一般现实使用组件样式的时候都会使用scope，或者采用css的BEM策略<h2 id="CSS-BEM策略"><a href="#CSS-BEM策略" class="headerlink" title="CSS BEM策略"></a>CSS BEM策略</h2>Block Element Modifier的首字母缩写，是一种css的命名规范，一般写作.block__element–modifier<blockquote>
+<p>B(block)：独立的页面及逻辑单元。 b-name</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>E(element): 块中的组成部分，不能脱离存在，一般为元素的功能单词或元素的标签。__element</p>
+</blockquote>
+<blockquote>
+<p>M(modifier): 修饰符，一般为某个元素的样式或处于的一种状态。–modifier</p>
+</blockquote>
+<h2 id="CSS-Modules"><a href="#CSS-Modules" class="headerlink" title="CSS Modules"></a>CSS Modules</h2><p>学这个之前让我想起来，我在使用Vue的时候，有时候样式名字总是带一串字符串，像是哈希字符串，涉及到了CSS Modules。</p>
+<p><strong>局部作用域</strong><br>使用了webpack构建模块的css-loader，把class名称唯一化，使之称为局部的作用域，把css文件输入到style对象中，然后引用style.title代表一个class，构建工具会把类名style.title编译成一个哈希字符串</p>
+<p><strong>全局作用域</strong><br>想要使用全局作用域，不加上哈希字符串，就使用:global(.className)</p>
+<p><strong>定制哈希类名</strong><br>css-loader的默认算法是[hash:base64]，可以再webpck.config.js里定制哈希字符串格式</p>
+<h2 id="Vuex状态管理"><a href="#Vuex状态管理" class="headerlink" title="Vuex状态管理"></a>Vuex状态管理</h2><p>采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。<br>有时候很多视图共享一个状态，使用传参非常复杂，通过定义和隔离状态管理中的各种概念并通过强制规则维持视图和状态间的独立性，我们的代码将会变得更结构化且易维护。</p>
+<p><strong>State单一状态树</strong><br>用一个对象就包含了全部的应用层级状态，用以作为唯一数据源，Vuex 通过 store 选项，提供了一种机制将状态从根组件“注入”到每一个子组件中（需调用</p>
+<p>当一个组件需要获取多个状态的时候，将这些状态都声明为计算属性会有些重复和冗余。为了解决这个问题，我们可以使用 mapState 辅助函数帮助我们生成计算属性<img src="https://img-blog.csdnimg.cn/60a2628858b04e8390d03b5c0bf75d29.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ4ODg2Njky,size_16,color_FFFFFF,t_70"><br><strong>Getter</strong><br>Vuex 允许我们在 store 中定义“getter”（可以认为是 store 的计算属性）。就像计算属性一样，getter 的返回值会根据它的依赖被缓存起来，且只有当它的依赖值发生了改变才会被重新计算。</p>
+
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+    
+        <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E9%A3%8E%E6%A0%BC%E6%8C%87%E5%8D%97/">风格指南</a>
+    
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/CSS/" rel="tag">CSS</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Vue/" rel="tag">Vue</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Vuex/" rel="tag">Vuex</a>
+    
+</div>
+
+  
+      <div class="nexmoe-post-footer">
+          <section class="nexmoe-comment">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+<div id="gitalk"></div>
+<script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: '80b2453b6d5f37ad6225',
+        clientSecret: '43e99fa852795c9a7b3eb924b2558c64b84bbdeb',
+        id: window.location.pathname,
+        repo: 'nexmoe.github.io',
+        owner: 'nexmoe',
+        admin: 'nexmoe'
+    })
+    gitalk.render('gitalk')
+</script>
+</section>
+      </div>
+  
+</div>
+            <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="回到顶部" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

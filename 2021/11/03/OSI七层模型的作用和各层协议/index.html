@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hans">
+
+<head>
+    
+    <title>OSI七层模型的作用和各层协议 - Karam</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="各层协议“身份”把每个人比作一台计算机，每个人身上都有物品，我们想要交换物品的时候，通常需要借助平台，比如想要买衣服上淘宝，想买书去当当，每个平台都给我们提供不同的服务，这就是应用层为服务用户提供了程序和协议买了物品以后，商家要发货，这时候如果是比较大的物品，比如木制衣柜，就需要把衣柜拆开成一小块，然后附上说明书，发送给用户，用户看说明书自己装，这个过程就是表示层，把数据压缩，解压，加密等，为应用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OSI七层模型的作用和各层协议">
+<meta property="og:url" content="http://example.com/2021/11/03/OSI%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BD%9C%E7%94%A8%E5%92%8C%E5%90%84%E5%B1%82%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:site_name" content="Karam">
+<meta property="og:description" content="各层协议“身份”把每个人比作一台计算机，每个人身上都有物品，我们想要交换物品的时候，通常需要借助平台，比如想要买衣服上淘宝，想买书去当当，每个平台都给我们提供不同的服务，这就是应用层为服务用户提供了程序和协议买了物品以后，商家要发货，这时候如果是比较大的物品，比如木制衣柜，就需要把衣柜拆开成一小块，然后附上说明书，发送给用户，用户看说明书自己装，这个过程就是表示层，把数据压缩，解压，加密等，为应用">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-11-03T09:00:36.000Z">
+<meta property="article:modified_time" content="2021-12-27T03:10:32.000Z">
+<meta property="article:author" content="Karam">
+<meta property="article:tag" content="计网">
+<meta property="article:tag" content="七层模型">
+<meta name="twitter:card" content="summary">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/highlight.js@9.15.8/styles/atom-one-dark.css,npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css,gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css,npm/hexo-theme-nexmoe@latest/source/lib/mdui_043tiny/css/mdui.css,npm/hexo-theme-nexmoe@latest/source/lib/iconfont/iconfont.css?v=233" crossorigin>
+    <link rel="stylesheet" href="/css/style.css?v=1650762693413">
+     
+    
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1650762693413">
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="mdui-drawer-body-left">
+    
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg)"></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Karam" class="mdui-btn mdui-btn-icon"><img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/avatar.png" alt="Karam"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Karam">
+            <img src="https://avatars.githubusercontent.com/u/71165769?v=4" alt="Karam" alt="Karam">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>Articles</span>61</div>
+        <div><span>Tags</span>43</div>
+        <div><span>Categories</span>13</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+    
+    <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:nexmoe.com" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="Search"></label>
+            </form>
+         
+    </div>
+</div>
+    
+    
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Categories</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/CSS/">CSS</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ES6/">ES6</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ElementUI源码/">ElementUI源码</a>
+          <span class="category-list-count">2</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/JavaScript/">JavaScript</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Vue/">Vue</a>
+          <span class="category-list-count">6</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/npm/">npm</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/优化/">优化</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/客户端/">客户端</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/性能优化/">性能优化</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/浏览器/">浏览器</a>
+          <span class="category-list-count">21</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/计算机网络/">计算机网络</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/项目复盘/">项目复盘</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/风格指南/">风格指南</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BFC/" style="font-size: 10px;">BFC</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Chrome/" style="font-size: 16.25px;">Chrome</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 11.25px;">ES6</a> <a href="/tags/Element/" style="font-size: 11.25px;">Element</a> <a href="/tags/HTTP/" style="font-size: 13.75px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 18.75px;">JavaScript</a> <a href="/tags/JavaScript-%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">JavaScript 浏览器</a> <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/JavsScript/" style="font-size: 10px;">JavsScript</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/URL/" style="font-size: 10px;">URL</a> <a href="/tags/V8/" style="font-size: 12.5px;">V8</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/Vue-router/" style="font-size: 11.25px;">Vue-router</a> <a href="/tags/Vuex/" style="font-size: 10px;">Vuex</a> <a href="/tags/css/" style="font-size: 11.25px;">css</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">七层模型</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 16.25px;">优化</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/" style="font-size: 10px;">原型链</a> <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" style="font-size: 10px;">垃圾回收</a> <a href="/tags/%E5%AE%9A%E6%97%B6%E5%99%A8/" style="font-size: 10px;">定时器</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 11.25px;">实现</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/" style="font-size: 10px;">客户端存储</a> <a href="/tags/%E5%BC%82%E6%AD%A5/" style="font-size: 10px;">异步</a> <a href="/tags/%E5%BC%95%E6%93%8E/" style="font-size: 10px;">引擎</a> <a href="/tags/%E6%87%92%E5%8A%A0%E8%BD%BD/" style="font-size: 10px;">懒加载</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 20px;">浏览器</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">浏览器安全</a> <a href="/tags/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">混杂模式</a> <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 11.25px;">渲染</a> <a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 11.25px;">源码</a> <a href="/tags/%E7%BB%84%E4%BB%B6/" style="font-size: 11.25px;">组件</a> <a href="/tags/%E7%BB%84%E4%BB%B6%E5%8C%96/" style="font-size: 10px;">组件化</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 10px;">缓存</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" style="font-size: 10px;">编译器</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 13.75px;">计算机网络</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 15px;">计网</a> <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" style="font-size: 11.25px;">项目复盘</a> <a href="/tags/%E9%A6%96%E5%B1%8F%E6%97%B6%E9%97%B4/" style="font-size: 12.5px;">首屏时间</a>
+    </div>
+    
+  </div>
+
+    
+</aside>
+    <div class="nexmoe-copyright">
+        &copy; 2022 Karam
+        Powered by 
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+            <div class="nexmoe-post">
+
+  <article>
+      
+          <div class="nexmoe-post-cover" style="padding-bottom: 62.5%;"> 
+              <img src="https://bkimg.cdn.bcebos.com/pic/b21bb051f8198618b8f0ae2b40ed2e738ad4e6ee?x-bce-process=image/resize,m_lfit,w_536,limit_1/format,f_jpg" data-sizes="auto" alt="OSI七层模型的作用和各层协议">
+              <h1>OSI七层模型的作用和各层协议</h1>
+          </div>
+      
+      
+      <div class="nexmoe-post-meta nexmoe-rainbow" style="margin:10px 0!important;">
+    <a><i class="nexmoefont icon-calendar-fill"></i>2021年11月03日</a>
+    <a><i class="nexmoefont icon-areachart"></i>857 字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>大概 3 分钟</a>
+</div>
+
+      
+
+      <h2 id="各层协议“身份”"><a href="#各层协议“身份”" class="headerlink" title="各层协议“身份”"></a>各层协议“身份”</h2><p>把每个人比作一台计算机，每个人身上都有物品，我们想要交换物品的时候，通常需要借助平台，比如想要买衣服上淘宝，想买书去当当，每个平台都给我们提供不同的服务，这就是<strong>应用层为服务用户提供了程序和协议</strong><br>买了物品以后，商家要发货，这时候如果是比较大的物品，比如木制衣柜，就需要把衣柜拆开成一小块，然后附上说明书，发送给用户，用户看说明书自己装，这个过程就是<strong>表示层，把数据压缩，解压，加密等，为应用提供语法选择，语法转换</strong><br>这时候需要用户去下单，如果用户下单了，客服就把物品发送给用户，客服的工作就是确认订单的开始，结束，货物的发送，接收的数量，会话层相当于客服，<strong>会话层的作用就是建立连接，管理，终止表示层实体间的会话连接</strong><br>确认货物的发送以后，货物要送给不同的快递公司去寄送，这里快递公司的任务就是确认你能接收到货物，<strong>传输层的作用是为会话层建立安全可靠的数据传输</strong><br>快递公司开始传输以后，要根据你的目的地，选择适合的路径，把包裹送到指定地点，所以<strong>网络层的作用是基于IP地址的数据传输在网络中路由的选择</strong><br>送到地址地区以后，会有快递小哥会根据详细地址，联系人，电话来找到你，快递小哥的作用就是根据你的个人信息（MAC地址）把快递送到你手上，<strong>数据链路层的作用就是物理寻址，为网络层提供服务</strong><br>物理层作用是比特流在传输媒介之间的传输，为数据传输提供物理媒介，进行数据的实际传输</p>
+<h2 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h2><ul>
+<li><strong>应用层：</strong> 是计算机用户，网络程序和网络之间的接口，为用户提供服务</li>
+<li><strong>表示层：</strong> 对应用层的数据和命令解释，和各种语法赋予含义，并且以一定的格式发送给会话层，主要作用书处理用户信息的表示问题，如加密，压缩，解压，编码问题，数据格式转换</li>
+<li><strong>会话层：</strong> 对两个实体的表示层之间提供建立和连接的方法，两个表示层之间的连接称为会话，会话层负责协调和组织两个会话进程的通信，并对数据交换进行管理</li>
+<li><strong>传输层：</strong> 该层主要负责提供可靠的端到端的差错和流量控制，保证报文传输正确，所以该层是通信子网和资源子网的桥梁和接口，起到承上启下的作用</li>
+<li><strong>网络层：</strong> 通过路由选择算法，为报文或者分组通过通信子网中选择合适的路径</li>
+<li><strong>数据链路层：</strong> 通过各种协议，把有差错的物理信道变为无差错的，能进行可靠传输数据帧的数据链路</li>
+<li><strong>物理层：</strong> 利用传输介质为数据链路层提供连接，实现比特流的透明传输</li>
+</ul>
+
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+    
+        <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+    
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B/" rel="tag">七层模型</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E8%AE%A1%E7%BD%91/" rel="tag">计网</a>
+    
+</div>
+
+  
+      <div class="nexmoe-post-footer">
+          <section class="nexmoe-comment">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+<div id="gitalk"></div>
+<script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: '80b2453b6d5f37ad6225',
+        clientSecret: '43e99fa852795c9a7b3eb924b2558c64b84bbdeb',
+        id: window.location.pathname,
+        repo: 'nexmoe.github.io',
+        owner: 'nexmoe',
+        admin: 'nexmoe'
+    })
+    gitalk.render('gitalk')
+</script>
+</section>
+      </div>
+  
+</div>
+            <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="回到顶部" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

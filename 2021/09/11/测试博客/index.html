@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hans">
+
+<head>
+    
+    <title>NAT和VPN - Karam</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="使用NATAPP的免费隧道，测试结果如下这时访问http:&#x2F;&#x2F;m2bdrz.natappfree.cc就可以访问到我本地的（也就是内网）内容 解决问题像我在对接实际项目的时候遇到的问题，有时候写项目需要用到服务器，比如写微信小程序，使用本地运行的项目根本无法访问，但是又没有购买自己的服务器，把自己的项目部署到服务器上也很麻烦，想立刻和前端对接项目，这时候需要用到挂载在服务器上的IP，我们就可以用使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NAT和VPN">
+<meta property="og:url" content="http://example.com/2021/09/11/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/index.html">
+<meta property="og:site_name" content="Karam">
+<meta property="og:description" content="使用NATAPP的免费隧道，测试结果如下这时访问http:&#x2F;&#x2F;m2bdrz.natappfree.cc就可以访问到我本地的（也就是内网）内容 解决问题像我在对接实际项目的时候遇到的问题，有时候写项目需要用到服务器，比如写微信小程序，使用本地运行的项目根本无法访问，但是又没有购买自己的服务器，把自己的项目部署到服务器上也很麻烦，想立刻和前端对接项目，这时候需要用到挂载在服务器上的IP，我们就可以用使">
+<meta property="og:locale">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/d3b982299f1442f88ac93431d542de96.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_18,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/645719cdf97d4b0d9c2a4a7ac0d7c383.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/11280b92488f477eb5e9d8531e97012a.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/4a83b5537ce84aa3bcd0c6751b6e3920.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/447ac5e863d5475a889faace7d266d1b.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/5cf8724f7f294ff89380a4ab1cfa8fed.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="article:published_time" content="2021-09-11T04:30:51.000Z">
+<meta property="article:modified_time" content="2021-12-26T07:56:28.000Z">
+<meta property="article:author" content="Karam">
+<meta property="article:tag" content="计网">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/d3b982299f1442f88ac93431d542de96.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_18,color_FFFFFF,t_70,g_se,x_16">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/highlight.js@9.15.8/styles/atom-one-dark.css,npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css,gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css,npm/hexo-theme-nexmoe@latest/source/lib/mdui_043tiny/css/mdui.css,npm/hexo-theme-nexmoe@latest/source/lib/iconfont/iconfont.css?v=233" crossorigin>
+    <link rel="stylesheet" href="/css/style.css?v=1650762693431">
+     
+    
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1650762693431">
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="mdui-drawer-body-left">
+    
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg)"></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Karam" class="mdui-btn mdui-btn-icon"><img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/avatar.png" alt="Karam"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Karam">
+            <img src="https://avatars.githubusercontent.com/u/71165769?v=4" alt="Karam" alt="Karam">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>Articles</span>61</div>
+        <div><span>Tags</span>43</div>
+        <div><span>Categories</span>13</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+    
+    <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:nexmoe.com" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="Search"></label>
+            </form>
+         
+    </div>
+</div>
+    
+    
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Categories</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/CSS/">CSS</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ES6/">ES6</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ElementUI源码/">ElementUI源码</a>
+          <span class="category-list-count">2</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/JavaScript/">JavaScript</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Vue/">Vue</a>
+          <span class="category-list-count">6</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/npm/">npm</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/优化/">优化</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/客户端/">客户端</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/性能优化/">性能优化</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/浏览器/">浏览器</a>
+          <span class="category-list-count">21</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/计算机网络/">计算机网络</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/项目复盘/">项目复盘</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/风格指南/">风格指南</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BFC/" style="font-size: 10px;">BFC</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Chrome/" style="font-size: 16.25px;">Chrome</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 11.25px;">ES6</a> <a href="/tags/Element/" style="font-size: 11.25px;">Element</a> <a href="/tags/HTTP/" style="font-size: 13.75px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 18.75px;">JavaScript</a> <a href="/tags/JavaScript-%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">JavaScript 浏览器</a> <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/JavsScript/" style="font-size: 10px;">JavsScript</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/URL/" style="font-size: 10px;">URL</a> <a href="/tags/V8/" style="font-size: 12.5px;">V8</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/Vue-router/" style="font-size: 11.25px;">Vue-router</a> <a href="/tags/Vuex/" style="font-size: 10px;">Vuex</a> <a href="/tags/css/" style="font-size: 11.25px;">css</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">七层模型</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 16.25px;">优化</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/" style="font-size: 10px;">原型链</a> <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" style="font-size: 10px;">垃圾回收</a> <a href="/tags/%E5%AE%9A%E6%97%B6%E5%99%A8/" style="font-size: 10px;">定时器</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 11.25px;">实现</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/" style="font-size: 10px;">客户端存储</a> <a href="/tags/%E5%BC%82%E6%AD%A5/" style="font-size: 10px;">异步</a> <a href="/tags/%E5%BC%95%E6%93%8E/" style="font-size: 10px;">引擎</a> <a href="/tags/%E6%87%92%E5%8A%A0%E8%BD%BD/" style="font-size: 10px;">懒加载</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 20px;">浏览器</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">浏览器安全</a> <a href="/tags/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">混杂模式</a> <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 11.25px;">渲染</a> <a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 11.25px;">源码</a> <a href="/tags/%E7%BB%84%E4%BB%B6/" style="font-size: 11.25px;">组件</a> <a href="/tags/%E7%BB%84%E4%BB%B6%E5%8C%96/" style="font-size: 10px;">组件化</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 10px;">缓存</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" style="font-size: 10px;">编译器</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 13.75px;">计算机网络</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 15px;">计网</a> <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" style="font-size: 11.25px;">项目复盘</a> <a href="/tags/%E9%A6%96%E5%B1%8F%E6%97%B6%E9%97%B4/" style="font-size: 12.5px;">首屏时间</a>
+    </div>
+    
+  </div>
+
+    
+</aside>
+    <div class="nexmoe-copyright">
+        &copy; 2022 Karam
+        Powered by 
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+            <div class="nexmoe-post">
+
+  <article>
+      
+          <div class="nexmoe-post-cover" style="padding-bottom: 62.5%;"> 
+              <img src="https://img-blog.csdnimg.cn/d3b982299f1442f88ac93431d542de96.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_18,color_FFFFFF,t_70,g_se,x_16" data-sizes="auto" alt="NAT和VPN">
+              <h1>NAT和VPN</h1>
+          </div>
+      
+      
+      <div class="nexmoe-post-meta nexmoe-rainbow" style="margin:10px 0!important;">
+    <a><i class="nexmoefont icon-calendar-fill"></i>2021年09月11日</a>
+    <a><i class="nexmoefont icon-areachart"></i>1.7k 字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>大概 6 分钟</a>
+</div>
+
+      
+
+      <p>使用NATAPP的免费隧道，测试结果如下<br><img src="https://img-blog.csdnimg.cn/d3b982299f1442f88ac93431d542de96.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_18,color_FFFFFF,t_70,g_se,x_16"><br>这时访问<a target="_blank" rel="noopener" href="http://m2bdrz.natappfree.cc就可以访问到我本地的(也就是内网)内容/">http://m2bdrz.natappfree.cc就可以访问到我本地的（也就是内网）内容</a></p>
+<h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>像我在对接实际项目的时候遇到的问题，有时候写项目需要用到服务器，比如写微信小程序，使用本地运行的项目根本无法访问，但是又没有购买自己的服务器，把自己的项目部署到服务器上也很麻烦，想立刻和前端对接项目，这时候需要用到挂载在服务器上的IP，我们就可以用使用内网穿透技术，把自己的项目放到公网上</p>
+<p>后端在调用微信小程序支付接口的时候，支付完成以后会有一个回调，这个回调的地址必须是一个外网可以访问的地址，此时如果没有配置好服务器，就无法完成回调</p>
+<h2 id="图解"><a href="#图解" class="headerlink" title="图解"></a>图解</h2><p><img src="https://img-blog.csdnimg.cn/645719cdf97d4b0d9c2a4a7ac0d7c383.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_20,color_FFFFFF,t_70,g_se,x_16"><br>首先我们应该运行在我们本地端口的项目，地址为<a href="http://localhost:8080，使用NAT技术，当有外面的Server访问http://test.com时，会通过外网映射到我们内网中来。">http://localhost:8080，使用NAT技术，当有外面的Server访问http://test.com时，会通过外网映射到我们内网中来。</a></p>
+<p>看完上面这个图，首先明确我们的问题是：</p>
+<ol>
+<li>为什么外网无法访问内网？</li>
+<li> NAT做了什么？怎么让内网放到公网上的？</li>
+<li>除了NAT，还有什么方法访问内网？</li>
+<li>这些放到公网上的方法有些什么区别？</li>
+</ol>
+<h2 id="一、外网和内网"><a href="#一、外网和内网" class="headerlink" title="一、外网和内网"></a>一、外网和内网</h2><p>首先我们每台设备都有一个IP地址，IP地址又分为公有IP地址和私有IP地址，私有IP是我们在连接局域网的时候使用的IP地址，公有IP地址是连接互联网的时候，由专门的组织（Internet NIC）分配IP。既然私有IP<br>总结下来就是：私有IP是局域网使用；公有IP是互联网使用<br>局域网有很多，所以私有IP可能会有很多，在不同局域网内可能会相同，所以私有IP是访问不到的，这就是外网无法访问内网的原因，<strong>外网根本找不到你内网的地址！！</strong></p>
+<p>PS：其实按规则来说，肯定公网IP也会重复，因为IP总是有限的，也就是“IP枯竭”的梗来源，面对IP有限的问题，电信，联通，移动，三大运营商（ISP）就使用了NAT（网络地址转换技术）</p>
+<h1 id="二、NAT是什么"><a href="#二、NAT是什么" class="headerlink" title="二、NAT是什么"></a>二、NAT是什么</h1><p>NAT是网络地址转换协议，也就是你的内网专有IP经过NAT技术，重写IP来源地址，或者映射成公网IP，对应上了，访问公网IP就能穿透这层，访问到你的私有IP。<br>是不是很抽象，难理解，这个东西就好像，比如，全校有很多学生，肯定会有学生（内网）是跟你同名（内网IP地址相同）的，加入这个时候名字的个数是有限的（内网IP有限），这时候如果老师（公网IP）想找到你，但是和你同名的学生（内网IP）实在是太多了，没办法，只能通过你在哪个班（NAT的公网IP），找到你的名字（内网IP），<br>再找到你！<br>总结就是：<strong>内网到公网的映射</strong><br>这时候NAT的优点很明显就表现出来了，一个是可以宽带共享，一个是保护了内网，访问的时候只能知道NAT的公网IP，保护client<br>这时候，我们看一下腾讯云的服务器介绍：<br><img src="https://img-blog.csdnimg.cn/11280b92488f477eb5e9d8531e97012a.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_20,color_FFFFFF,t_70,g_se,x_16"><br><img src="https://img-blog.csdnimg.cn/4a83b5537ce84aa3bcd0c6751b6e3920.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
+<p>一下就看懂了呢！原来云服务器也是使用NAT技术</p>
+<p>NAT技术的三种实现方法：</p>
+<ol>
+<li>静态转换：内网IP转换为公网IP，IP地址是一对一的，不变的</li>
+<li>动态转换：内网IP转为公网IP，但是IP地址是随机的，可以转为随机合法的IP</li>
+<li>端口多路复用：内网IP映射到公网IP的某个选定的端口下</li>
+<li>ALG应用程序级网关技术：对这些应用程序在通信时所包含的地址信息也进行相应的NAT转换</li>
+</ol>
+<p>所以NAT具体到底做了什么？<br><img src="https://img-blog.csdnimg.cn/447ac5e863d5475a889faace7d266d1b.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_20,color_FFFFFF,t_70,g_se,x_16"><br>当内网连接到NAT路由器时，NAT路由器接收到公网发来的数据包后，修改目的IP地址修改成NAT table中对应的内网IP，NAT table就是地址对应的表信息</p>
+<h1 id="三、VPN"><a href="#三、VPN" class="headerlink" title="三、VPN"></a>三、VPN</h1><p>除了NAT技术，还有什么技术，可以让我们访问到内网呢？那就是VPN虚拟专用网，首先看一个图解，VPN的工作：<br><img src="https://img-blog.csdnimg.cn/5cf8724f7f294ff89380a4ab1cfa8fed.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_20,color_FFFFFF,t_70,g_se,x_16"><br>首先，我自己的内网，连上了VPN服务器，然后通过VPN服务器，我加入到了专有的内网中，这就实现了两个内网之间的交换数据，并且保证了安全性。一般来说VPN服务器需要专门购买，并且价格要贵些</p>
+<p>VPN在准备发送数据的时候，对数据报做了封装，然后放到公网上进行传输，即时有人截获这个数据包，因为数据包已经封装过了，所以无法获取到里面的内容，最后接收方解密这个数据报，这就是VPN。</p>
+<p><strong>VPN实际是把广域网中的某台电脑，加入到自己的内网中来</strong></p>
+<h2 id="VPN是如何工作的"><a href="#VPN是如何工作的" class="headerlink" title="VPN是如何工作的"></a>VPN是如何工作的</h2><p>VPN就是基于IP协议的包装，让数据传递更安全，也就是包装IP协议来传输的协议<br>VPN里面涉及三种协议：乘客协议，隧道协议，承载协议</p>
+<p>因为公网传输数据容易被监听或者篡改，所以云服务器会有IPsec VPN的技术，保证公网上数据传输的安全性</p>
+<ol>
+<li>私密性：使用对称加密把数据加密成无法读懂的密文</li>
+<li>完整性：保证数据不被纂改，对数据进行hash运算</li>
+<li>真实性：通过身份认证数据是从对端发出的</li>
+</ol>
+<p>如何保证数据发送方的身份？</p>
+<ul>
+<li>预共享密匙（PSK）：受信任的对端拥有密匙</li>
+<li>用数字签名验证（RSK签名）：本地设备生成散列值，然后通过私钥加密，然后把加密的散列值（数字签名）附加在信息上，发送给服务器，服务器如果解密散列值相同，那么证明确实是发送方发来的</li>
+</ul>
+<h2 id="四、区别"><a href="#四、区别" class="headerlink" title="四、区别"></a>四、区别</h2><p>VPN可以访问局域网中的所有电脑，而NAT只是做了转发，范围就小了</p>
+<h3 id="为什么使用VPN就可以跨国？"><a href="#为什么使用VPN就可以跨国？" class="headerlink" title="为什么使用VPN就可以跨国？"></a>为什么使用VPN就可以跨国？</h3><p>因为VPN避开了GFW（中国防火长城 great firewall）的审查，因为VPN使用了隧道协议加密了数据，GFW无法知道目标访问地址，所以可以访问国外的网站</p>
+
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+    
+        <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+    
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E8%AE%A1%E7%BD%91/" rel="tag">计网</a>
+    
+</div>
+
+  
+      <div class="nexmoe-post-footer">
+          <section class="nexmoe-comment">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+<div id="gitalk"></div>
+<script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: '80b2453b6d5f37ad6225',
+        clientSecret: '43e99fa852795c9a7b3eb924b2558c64b84bbdeb',
+        id: window.location.pathname,
+        repo: 'nexmoe.github.io',
+        owner: 'nexmoe',
+        admin: 'nexmoe'
+    })
+    gitalk.render('gitalk')
+</script>
+</section>
+      </div>
+  
+</div>
+            <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="回到顶部" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

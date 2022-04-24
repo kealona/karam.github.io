@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hans">
+
+<head>
+    
+    <title>Chrome架构——浏览器架构 - Karam</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="进程进程的概念，当一个进程运行的时候，进程是一个程序运行的实例，操作系统会为进程分配一段内存使用，用来存放代码，运行数据和执行任务的主线程叫做进程 进程和线程线程不能脱离进程单独存在，线程运行在进程中，需要进程启动和管理，多线程可以并行处理任务 进程和线程的关系特点 进程中的任一线程崩溃，都会导致进程崩溃 线程之间共享数据 一个进程关闭后，进程执行的内存会被回收，浏览器关闭了，内存就被回收了（解决">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chrome架构——浏览器架构">
+<meta property="og:url" content="http://example.com/2021/10/11/Chrome%E6%9E%B6%E6%9E%84%E2%80%94%E2%80%94%E6%B5%8F%E8%A7%88%E5%99%A8%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="Karam">
+<meta property="og:description" content="进程进程的概念，当一个进程运行的时候，进程是一个程序运行的实例，操作系统会为进程分配一段内存使用，用来存放代码，运行数据和执行任务的主线程叫做进程 进程和线程线程不能脱离进程单独存在，线程运行在进程中，需要进程启动和管理，多线程可以并行处理任务 进程和线程的关系特点 进程中的任一线程崩溃，都会导致进程崩溃 线程之间共享数据 一个进程关闭后，进程执行的内存会被回收，浏览器关闭了，内存就被回收了（解决">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-10-11T13:39:35.000Z">
+<meta property="article:modified_time" content="2021-12-27T02:59:26.000Z">
+<meta property="article:author" content="Karam">
+<meta property="article:tag" content="浏览器">
+<meta property="article:tag" content="Chrome">
+<meta name="twitter:card" content="summary">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/highlight.js@9.15.8/styles/atom-one-dark.css,npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css,gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css,npm/hexo-theme-nexmoe@latest/source/lib/mdui_043tiny/css/mdui.css,npm/hexo-theme-nexmoe@latest/source/lib/iconfont/iconfont.css?v=233" crossorigin>
+    <link rel="stylesheet" href="/css/style.css?v=1650762693425">
+     
+    
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1650762693425">
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="mdui-drawer-body-left">
+    
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg)"></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Karam" class="mdui-btn mdui-btn-icon"><img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/avatar.png" alt="Karam"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Karam">
+            <img src="https://avatars.githubusercontent.com/u/71165769?v=4" alt="Karam" alt="Karam">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>Articles</span>61</div>
+        <div><span>Tags</span>43</div>
+        <div><span>Categories</span>13</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+    
+    <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:nexmoe.com" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="Search"></label>
+            </form>
+         
+    </div>
+</div>
+    
+    
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Categories</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/CSS/">CSS</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ES6/">ES6</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ElementUI源码/">ElementUI源码</a>
+          <span class="category-list-count">2</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/JavaScript/">JavaScript</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Vue/">Vue</a>
+          <span class="category-list-count">6</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/npm/">npm</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/优化/">优化</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/客户端/">客户端</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/性能优化/">性能优化</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/浏览器/">浏览器</a>
+          <span class="category-list-count">21</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/计算机网络/">计算机网络</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/项目复盘/">项目复盘</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/风格指南/">风格指南</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BFC/" style="font-size: 10px;">BFC</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Chrome/" style="font-size: 16.25px;">Chrome</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 11.25px;">ES6</a> <a href="/tags/Element/" style="font-size: 11.25px;">Element</a> <a href="/tags/HTTP/" style="font-size: 13.75px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 18.75px;">JavaScript</a> <a href="/tags/JavaScript-%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">JavaScript 浏览器</a> <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/JavsScript/" style="font-size: 10px;">JavsScript</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/URL/" style="font-size: 10px;">URL</a> <a href="/tags/V8/" style="font-size: 12.5px;">V8</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/Vue-router/" style="font-size: 11.25px;">Vue-router</a> <a href="/tags/Vuex/" style="font-size: 10px;">Vuex</a> <a href="/tags/css/" style="font-size: 11.25px;">css</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">七层模型</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 16.25px;">优化</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/" style="font-size: 10px;">原型链</a> <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" style="font-size: 10px;">垃圾回收</a> <a href="/tags/%E5%AE%9A%E6%97%B6%E5%99%A8/" style="font-size: 10px;">定时器</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 11.25px;">实现</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/" style="font-size: 10px;">客户端存储</a> <a href="/tags/%E5%BC%82%E6%AD%A5/" style="font-size: 10px;">异步</a> <a href="/tags/%E5%BC%95%E6%93%8E/" style="font-size: 10px;">引擎</a> <a href="/tags/%E6%87%92%E5%8A%A0%E8%BD%BD/" style="font-size: 10px;">懒加载</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 20px;">浏览器</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">浏览器安全</a> <a href="/tags/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">混杂模式</a> <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 11.25px;">渲染</a> <a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 11.25px;">源码</a> <a href="/tags/%E7%BB%84%E4%BB%B6/" style="font-size: 11.25px;">组件</a> <a href="/tags/%E7%BB%84%E4%BB%B6%E5%8C%96/" style="font-size: 10px;">组件化</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 10px;">缓存</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" style="font-size: 10px;">编译器</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 13.75px;">计算机网络</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 15px;">计网</a> <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" style="font-size: 11.25px;">项目复盘</a> <a href="/tags/%E9%A6%96%E5%B1%8F%E6%97%B6%E9%97%B4/" style="font-size: 12.5px;">首屏时间</a>
+    </div>
+    
+  </div>
+
+    
+</aside>
+    <div class="nexmoe-copyright">
+        &copy; 2022 Karam
+        Powered by 
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+            <div class="nexmoe-post">
+
+  <article>
+      
+          <div class="nexmoe-post-cover" style="padding-bottom: 62.5%;"> 
+              <img src="https://pic3.zhimg.com/80/v2-4f3f75825d469fbe0898288647439362_720w.jpg" data-sizes="auto" alt="Chrome架构——浏览器架构">
+              <h1>Chrome架构——浏览器架构</h1>
+          </div>
+      
+      
+      <div class="nexmoe-post-meta nexmoe-rainbow" style="margin:10px 0!important;">
+    <a><i class="nexmoefont icon-calendar-fill"></i>2021年10月11日</a>
+    <a><i class="nexmoefont icon-areachart"></i>779 字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>大概 3 分钟</a>
+</div>
+
+      
+
+      <h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><p>进程的概念，当一个进程运行的时候，<strong>进程是一个程序运行的实例</strong>，操作系统会为进程分配一段内存使用，用来存放代码，运行数据和执行任务的主线程叫做进程</p>
+<h2 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h2><p>线程不能脱离进程单独存在，线程运行在进程中，需要进程启动和管理，多线程可以并行处理任务</p>
+<h2 id="进程和线程的关系特点"><a href="#进程和线程的关系特点" class="headerlink" title="进程和线程的关系特点"></a>进程和线程的关系特点</h2><ol>
+<li>进程中的任一线程崩溃，都会导致进程崩溃</li>
+<li>线程之间共享数据</li>
+<li>一个进程关闭后，进程执行的内存会被回收，浏览器关闭了，内存就被回收了（解决内存泄漏问题）</li>
+<li>进程隔离性，每个进程间的数据是不可以相互读写的，每个进程只能访问自己占有的数据，所以一个进程崩溃了并不会影响到其他进程的运行</li>
+</ol>
+<h2 id="单进程浏览器问题"><a href="#单进程浏览器问题" class="headerlink" title="单进程浏览器问题"></a>单进程浏览器问题</h2><ol>
+<li>不流畅：插件和脚本的运行都在单线程上，执行的时候会独占整个线程导致卡顿；内存泄漏也会导致页面卡顿，关闭页面内存也不会被全部回收</li>
+<li>不稳定：很多功能需要借助插件完成，如果插件崩溃，整个页面都会崩溃；渲染引擎模块也会引起不稳定，如果渲染引擎执行复杂的JS代码可能会导致页面崩溃</li>
+<li>不安全：一个进程里的线程读写共享，可以通过插件来访问各种数据，也可以通过恶意脚本攻击<h2 id="如何解决单进程的问题"><a href="#如何解决单进程的问题" class="headerlink" title="如何解决单进程的问题"></a>如何解决单进程的问题</h2></li>
+</ol>
+<ul>
+<li>不流畅：插件和脚本都单独运行在一个进程中，如果其中一个崩溃就不会影响到其他的进程运行；内存泄露问题，关闭页面的时候浏览器都会回收内存</li>
+<li>不稳定：多进程互不影响，因为进程执行的时候是隔离的</li>
+<li>不安全：多进程，每个进程之间的内存隔离，不能互相访问，也就是安全沙箱，别的进程不可以访问其他线程的资源，像是给进程上了一把锁，恶意插件也没法突破安全沙箱</li>
+</ul>
+<h1 id="多进程浏览器"><a href="#多进程浏览器" class="headerlink" title="多进程浏览器"></a>多进程浏览器</h1><p>目前的多进程浏览器的进程分为：一个浏览器进程，一个网络进程，多个渲染进程，一个GPU进程，多个插件进程</p>
+<ol>
+<li>浏览器进程：浏览器的用户交互，子进程的管理，数据的存储等</li>
+<li>网络进程：请求网络的进程</li>
+<li>渲染进程：HTML+CSS+JavaScript运行成一个页面，包括JavaScript的V8引擎和排版银枪Blink都运行在这里，存放HTML+CSS+JavaScript的代码，执行任务，运行代码</li>
+<li>GPU进程：用于处理图形计算，一般用于计算视频，图形的渲染</li>
+<li>插件进程：运行插件的进程，主要是隔离插件的运行，防止插件影响其他线程的运行和安全性考虑</li>
+</ol>
+
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+    
+        <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a>
+    
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Chrome/" rel="tag">Chrome</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="tag">浏览器</a>
+    
+</div>
+
+  
+      <div class="nexmoe-post-footer">
+          <section class="nexmoe-comment">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+<div id="gitalk"></div>
+<script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: '80b2453b6d5f37ad6225',
+        clientSecret: '43e99fa852795c9a7b3eb924b2558c64b84bbdeb',
+        id: window.location.pathname,
+        repo: 'nexmoe.github.io',
+        owner: 'nexmoe',
+        admin: 'nexmoe'
+    })
+    gitalk.render('gitalk')
+</script>
+</section>
+      </div>
+  
+</div>
+            <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="回到顶部" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

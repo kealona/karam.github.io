@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hans">
+
+<head>
+    
+    <title>Vue双向绑定2.0和3.0区别 - Karam</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="Vue2.0实现双向绑定Vue2.0使用ES5的Object.defineProperty()实现数据劫持和双向绑定Obejct.defineProperty()可以添加对象属性或者修改属性用法：Obejct.defineProperty(obj, prop, descriptor)obj：目标对象prop：对象属性descriptor：属性特性返回处理后的对象obj如果没有给Object设置特性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue双向绑定2.0和3.0区别">
+<meta property="og:url" content="http://example.com/2021/10/13/Vue%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A2-0%E5%92%8C3-0%E5%8C%BA%E5%88%AB/index.html">
+<meta property="og:site_name" content="Karam">
+<meta property="og:description" content="Vue2.0实现双向绑定Vue2.0使用ES5的Object.defineProperty()实现数据劫持和双向绑定Obejct.defineProperty()可以添加对象属性或者修改属性用法：Obejct.defineProperty(obj, prop, descriptor)obj：目标对象prop：对象属性descriptor：属性特性返回处理后的对象obj如果没有给Object设置特性">
+<meta property="og:locale">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/1db083280d2740fda8a12981b006cab9.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_17,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/72a76e1d5c644da29e00f3a3d380f0a4.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/c00b30547f014f0c9b8520b233adc038.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/5369240c3f654628b4300fa2820ac28f.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/3686fb980e4646c4aab4f92b02dc2884.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_13,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/6d29f49e324542e3905744ef60fe52da.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_16,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/44ec1a42b582423eb6487d756c9e36d4.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/10054c5906744232a48d28577f54c9fa.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_14,color_FFFFFF,t_70,g_se,x_16">
+<meta property="article:published_time" content="2021-10-13T08:44:16.000Z">
+<meta property="article:modified_time" content="2021-12-27T03:00:42.000Z">
+<meta property="article:author" content="Karam">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/1db083280d2740fda8a12981b006cab9.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_17,color_FFFFFF,t_70,g_se,x_16">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/highlight.js@9.15.8/styles/atom-one-dark.css,npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css,gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css,npm/hexo-theme-nexmoe@latest/source/lib/mdui_043tiny/css/mdui.css,npm/hexo-theme-nexmoe@latest/source/lib/iconfont/iconfont.css?v=233" crossorigin>
+    <link rel="stylesheet" href="/css/style.css?v=1650762693424">
+     
+    
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1650762693424">
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="mdui-drawer-body-left">
+    
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg)"></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Karam" class="mdui-btn mdui-btn-icon"><img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/avatar.png" alt="Karam"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Karam">
+            <img src="https://avatars.githubusercontent.com/u/71165769?v=4" alt="Karam" alt="Karam">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>Articles</span>61</div>
+        <div><span>Tags</span>43</div>
+        <div><span>Categories</span>13</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+    
+    <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:nexmoe.com" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="Search"></label>
+            </form>
+         
+    </div>
+</div>
+    
+    
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Categories</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/CSS/">CSS</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ES6/">ES6</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ElementUI源码/">ElementUI源码</a>
+          <span class="category-list-count">2</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/JavaScript/">JavaScript</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Vue/">Vue</a>
+          <span class="category-list-count">6</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/npm/">npm</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/优化/">优化</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/客户端/">客户端</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/性能优化/">性能优化</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/浏览器/">浏览器</a>
+          <span class="category-list-count">21</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/计算机网络/">计算机网络</a>
+          <span class="category-list-count">8</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/项目复盘/">项目复盘</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/风格指南/">风格指南</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BFC/" style="font-size: 10px;">BFC</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Chrome/" style="font-size: 16.25px;">Chrome</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 11.25px;">ES6</a> <a href="/tags/Element/" style="font-size: 11.25px;">Element</a> <a href="/tags/HTTP/" style="font-size: 13.75px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 18.75px;">JavaScript</a> <a href="/tags/JavaScript-%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">JavaScript 浏览器</a> <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/JavsScript/" style="font-size: 10px;">JavsScript</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/URL/" style="font-size: 10px;">URL</a> <a href="/tags/V8/" style="font-size: 12.5px;">V8</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/Vue-router/" style="font-size: 11.25px;">Vue-router</a> <a href="/tags/Vuex/" style="font-size: 10px;">Vuex</a> <a href="/tags/css/" style="font-size: 11.25px;">css</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">七层模型</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 16.25px;">优化</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/" style="font-size: 10px;">原型链</a> <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" style="font-size: 10px;">垃圾回收</a> <a href="/tags/%E5%AE%9A%E6%97%B6%E5%99%A8/" style="font-size: 10px;">定时器</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 11.25px;">实现</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/" style="font-size: 10px;">客户端存储</a> <a href="/tags/%E5%BC%82%E6%AD%A5/" style="font-size: 10px;">异步</a> <a href="/tags/%E5%BC%95%E6%93%8E/" style="font-size: 10px;">引擎</a> <a href="/tags/%E6%87%92%E5%8A%A0%E8%BD%BD/" style="font-size: 10px;">懒加载</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 20px;">浏览器</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">浏览器安全</a> <a href="/tags/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">混杂模式</a> <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 11.25px;">渲染</a> <a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 11.25px;">源码</a> <a href="/tags/%E7%BB%84%E4%BB%B6/" style="font-size: 11.25px;">组件</a> <a href="/tags/%E7%BB%84%E4%BB%B6%E5%8C%96/" style="font-size: 10px;">组件化</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 10px;">缓存</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" style="font-size: 10px;">编译器</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 13.75px;">计算机网络</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 15px;">计网</a> <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" style="font-size: 11.25px;">项目复盘</a> <a href="/tags/%E9%A6%96%E5%B1%8F%E6%97%B6%E9%97%B4/" style="font-size: 12.5px;">首屏时间</a>
+    </div>
+    
+  </div>
+
+    
+</aside>
+    <div class="nexmoe-copyright">
+        &copy; 2022 Karam
+        Powered by 
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+            <div class="nexmoe-post">
+
+  <article>
+      
+          <div class="nexmoe-post-cover" style="padding-bottom: 62.5%;"> 
+              <img src="https://cn.vuejs.org/images/logo.svg" data-sizes="auto" alt="Vue双向绑定2.0和3.0区别">
+              <h1>Vue双向绑定2.0和3.0区别</h1>
+          </div>
+      
+      
+      <div class="nexmoe-post-meta nexmoe-rainbow" style="margin:10px 0!important;">
+    <a><i class="nexmoefont icon-calendar-fill"></i>2021年10月13日</a>
+    <a><i class="nexmoefont icon-areachart"></i>670 字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>大概 2 分钟</a>
+</div>
+
+      
+
+      <h2 id="Vue2-0实现双向绑定"><a href="#Vue2-0实现双向绑定" class="headerlink" title="Vue2.0实现双向绑定"></a>Vue2.0实现双向绑定</h2><p>Vue2.0使用ES5的Object.defineProperty()实现数据劫持和双向绑定<br><strong>Obejct.defineProperty()可以添加对象属性或者修改属性</strong><br>用法：<br>Obejct.defineProperty(obj, prop, descriptor)<br>obj：目标对象<br>prop：对象属性<br>descriptor：属性特性<br>返回处理后的对象obj<br>如果没有给Object设置特性的话，默认configurable,enumrable.writable都为false<br><img src="https://img-blog.csdnimg.cn/1db083280d2740fda8a12981b006cab9.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_17,color_FFFFFF,t_70,g_se,x_16"><br>返回结果：<br><img src="https://img-blog.csdnimg.cn/72a76e1d5c644da29e00f3a3d380f0a4.png"><br><img src="https://img-blog.csdnimg.cn/c00b30547f014f0c9b8520b233adc038.png"><br>设置了setter，getter方法以后<br><img src="https://img-blog.csdnimg.cn/5369240c3f654628b4300fa2820ac28f.png"><br>这里可以看到Object.defineProperty()方法劫持了set方法，也就为Vue.2.0的双向绑定提供了思路</p>
+<h2 id="Vue3-0实现双向绑定"><a href="#Vue3-0实现双向绑定" class="headerlink" title="Vue3.0实现双向绑定"></a>Vue3.0实现双向绑定</h2><p>Vue3.0使用ES6的Proxy代理setter，getter方法，代理整个对象，只要对象的某个属性发生变化，就可以劫持数据<br><img src="https://img-blog.csdnimg.cn/3686fb980e4646c4aab4f92b02dc2884.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_13,color_FFFFFF,t_70,g_se,x_16"></p>
+<h1 id="Vue2-0和Vue3-0双向绑定的区别"><a href="#Vue2-0和Vue3-0双向绑定的区别" class="headerlink" title="Vue2.0和Vue3.0双向绑定的区别"></a>Vue2.0和Vue3.0双向绑定的区别</h1><p>Vue2.0的Object.defineProperty()只能劫持对象中的某个属性，而Proxy可以监听整个对象<br>vue2.0如果对象的属性增加或者删除无法监听到，无法监听到数组基于下标的修改，还有无法改变length</p>
+<h1 id="观察者模式和发布者订阅者模式的区别"><a href="#观察者模式和发布者订阅者模式的区别" class="headerlink" title="观察者模式和发布者订阅者模式的区别"></a>观察者模式和发布者订阅者模式的区别</h1><p>发布订阅模式多了一层类似代理的关系，调度中心</p>
+<h2 id="发布者-订阅者模式"><a href="#发布者-订阅者模式" class="headerlink" title="发布者-订阅者模式"></a>发布者-订阅者模式</h2><p>发布订阅模式在观察者模式的基础上加上了一个中间层代理“通知”的角色，这让发布者不直接与沟通者联系，不知道有哪些订阅者订阅了自己，发布者只负责“发布”一个责任，而订阅者只负责接受信息然后更新。<br>订阅者把想要订阅的事件注册到调用中心去，发布者把更新发布到调用中心，调用中心统一通知订阅者<br><img src="https://img-blog.csdnimg.cn/6d29f49e324542e3905744ef60fe52da.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_16,color_FFFFFF,t_70,g_se,x_16"><br>实现效果如下：<br><img src="https://img-blog.csdnimg.cn/44ec1a42b582423eb6487d756c9e36d4.png"></p>
+<h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><p>有时候观察者模式又称为发布订阅模式，但其实两种模式还是存在区别的，观察者模式是一对多关系，当对象改变，其他依赖它的对象都会更新改变<br>优点：</p>
+<ol>
+<li>降低目标与观察者之间的耦合关系，两者是抽象耦合关系，符合依赖倒置原则</li>
+<li>目标和观察者建立一套触发机制</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>依赖关系没有完全解除，可能出现循环利用</li>
+<li>当观察者很多的时候，通知需要花很多时间，影响程序效率</li>
+</ol>
+<p><img src="https://img-blog.csdnimg.cn/10054c5906744232a48d28577f54c9fa.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAcXFfNDg4ODY2OTI=,size_14,color_FFFFFF,t_70,g_se,x_16"><br>这里实现了简单的观察者模式，每次obj的name属性变化时，set都会监听到， 并且通知观察者更新数据</p>
+<h2 id="Vue模型的建立以及怎么实现的"><a href="#Vue模型的建立以及怎么实现的" class="headerlink" title="Vue模型的建立以及怎么实现的"></a>Vue模型的建立以及怎么实现的</h2><p>对于一个template，先计算出dom树，生成render函数，然后绘制布局，最后绘制样式</p>
+
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+    
+        <a class="nexmoefont icon-appstore-fill -link" href="/categories/Vue/">Vue</a>
+    
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Vue/" rel="tag">Vue</a>
+    
+</div>
+
+  
+      <div class="nexmoe-post-footer">
+          <section class="nexmoe-comment">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+<div id="gitalk"></div>
+<script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: '80b2453b6d5f37ad6225',
+        clientSecret: '43e99fa852795c9a7b3eb924b2558c64b84bbdeb',
+        id: window.location.pathname,
+        repo: 'nexmoe.github.io',
+        owner: 'nexmoe',
+        admin: 'nexmoe'
+    })
+    gitalk.render('gitalk')
+</script>
+</section>
+      </div>
+  
+</div>
+            <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="回到顶部" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
