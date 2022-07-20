@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hans">
+
+<head>
+    
+    <title>HTTPS协议学习 - Karam</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="什么是HTTPSHTTPS规定了新的协议名，默认端口号443，它让HTTP运行在安全的SSL&#x2F;TLS协议上，收发报文不再使用Socket API，而是调用专门的安全接口 SSL&#x2F;TLSSSL即安全套接层，处于OSI的第五层（会话层）他发展了v1，v2，v3版本，在v3时期改名叫TLS传输层安全 对称加密和非对称加密对称加密指的是，加密和解密的时候使用同一个密钥，双方约定好同一个公钥。对称加密算法有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTPS协议学习">
+<meta property="og:url" content="http://example.com/2022/07/07/HTTPS%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Karam">
+<meta property="og:description" content="什么是HTTPSHTTPS规定了新的协议名，默认端口号443，它让HTTP运行在安全的SSL&#x2F;TLS协议上，收发报文不再使用Socket API，而是调用专门的安全接口 SSL&#x2F;TLSSSL即安全套接层，处于OSI的第五层（会话层）他发展了v1，v2，v3版本，在v3时期改名叫TLS传输层安全 对称加密和非对称加密对称加密指的是，加密和解密的时候使用同一个密钥，双方约定好同一个公钥。对称加密算法有">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-07-07T01:54:00.000Z">
+<meta property="article:modified_time" content="2022-07-07T09:36:16.650Z">
+<meta property="article:author" content="Karam">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="HTTPS">
+<meta name="twitter:card" content="summary">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/highlight.js@9.15.8/styles/atom-one-dark.css,npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css,gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css,npm/hexo-theme-nexmoe@latest/source/lib/mdui_043tiny/css/mdui.css,npm/hexo-theme-nexmoe@latest/source/lib/iconfont/iconfont.css?v=233" crossorigin>
+    <link rel="stylesheet" href="/css/style.css?v=1658316801299">
+     
+    
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1658316801299">
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="mdui-drawer-body-left">
+    
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg)"></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Karam" class="mdui-btn mdui-btn-icon"><img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/avatar.png" alt="Karam"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Karam">
+            <img src="https://avatars.githubusercontent.com/u/71165769?v=4" alt="Karam" alt="Karam">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>Articles</span>68</div>
+        <div><span>Tags</span>50</div>
+        <div><span>Categories</span>14</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+    
+    <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:nexmoe.com" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="Search"></label>
+            </form>
+         
+    </div>
+</div>
+    
+    
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Categories</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/CSS/">CSS</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ES6/">ES6</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ElementUI源码/">ElementUI源码</a>
+          <span class="category-list-count">2</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/JavaScript/">JavaScript</a>
+          <span class="category-list-count">9</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Vue/">Vue</a>
+          <span class="category-list-count">7</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/npm/">npm</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/优化/">优化</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/客户端/">客户端</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/性能优化/">性能优化</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/操作系统/">操作系统</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/浏览器/">浏览器</a>
+          <span class="category-list-count">21</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/计算机网络/">计算机网络</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/项目复盘/">项目复盘</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/风格指南/">风格指南</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BFC/" style="font-size: 10px;">BFC</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Chrome/" style="font-size: 16.25px;">Chrome</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 11.25px;">ES6</a> <a href="/tags/Element/" style="font-size: 11.25px;">Element</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/JavaScript/" style="font-size: 18.75px;">JavaScript</a> <a href="/tags/JavaScript-%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">JavaScript 浏览器</a> <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/JavsScript/" style="font-size: 10px;">JavsScript</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/URL/" style="font-size: 10px;">URL</a> <a href="/tags/V8/" style="font-size: 12.5px;">V8</a> <a href="/tags/Vue/" style="font-size: 18.75px;">Vue</a> <a href="/tags/Vue-router/" style="font-size: 11.25px;">Vue-router</a> <a href="/tags/Vuex/" style="font-size: 10px;">Vuex</a> <a href="/tags/Vue%E6%BA%90%E7%A0%81/" style="font-size: 10px;">Vue源码</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 11.25px;">css</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">七层模型</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 16.25px;">优化</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/" style="font-size: 10px;">原型链</a> <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" style="font-size: 10px;">垃圾回收</a> <a href="/tags/%E5%AE%9A%E6%97%B6%E5%99%A8/" style="font-size: 10px;">定时器</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 11.25px;">实现</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/" style="font-size: 10px;">客户端存储</a> <a href="/tags/%E5%BC%82%E6%AD%A5/" style="font-size: 10px;">异步</a> <a href="/tags/%E5%BC%95%E6%93%8E/" style="font-size: 10px;">引擎</a> <a href="/tags/%E6%87%92%E5%8A%A0%E8%BD%BD/" style="font-size: 10px;">懒加载</a> <a href="/tags/%E6%89%8B%E5%86%99/" style="font-size: 10px;">手写</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 10px;">操作系统</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 20px;">浏览器</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">浏览器安全</a> <a href="/tags/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">混杂模式</a> <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 11.25px;">渲染</a> <a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 12.5px;">源码</a> <a href="/tags/%E7%BB%84%E4%BB%B6/" style="font-size: 11.25px;">组件</a> <a href="/tags/%E7%BB%84%E4%BB%B6%E5%8C%96/" style="font-size: 10px;">组件化</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 10px;">缓存</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" style="font-size: 10px;">编译器</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 17.5px;">计算机网络</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 15px;">计网</a> <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" style="font-size: 11.25px;">项目复盘</a> <a href="/tags/%E9%A6%96%E5%B1%8F%E6%97%B6%E9%97%B4/" style="font-size: 12.5px;">首屏时间</a>
+    </div>
+    
+  </div>
+
+    
+</aside>
+    <div class="nexmoe-copyright">
+        &copy; 2022 Karam
+        Powered by 
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+            <div class="nexmoe-post">
+
+  <article>
+      
+          <div class="nexmoe-post-cover" style="padding-bottom: 66.66666666666666%;"> 
+              <img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg" data-sizes="auto" alt="HTTPS协议学习">
+              <h1>HTTPS协议学习</h1>
+          </div>
+      
+      
+      <div class="nexmoe-post-meta nexmoe-rainbow" style="margin:10px 0!important;">
+    <a><i class="nexmoefont icon-calendar-fill"></i>2022年07月07日</a>
+    <a><i class="nexmoefont icon-areachart"></i>2.1k 字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>大概 8 分钟</a>
+</div>
+
+      
+
+      <h2 id="什么是HTTPS"><a href="#什么是HTTPS" class="headerlink" title="什么是HTTPS"></a>什么是HTTPS</h2><p>HTTPS规定了新的协议名，默认端口号443，它让HTTP运行在安全的SSL/TLS协议上，收发报文不再使用Socket API，而是调用专门的安全接口</p>
+<h3 id="SSL-TLS"><a href="#SSL-TLS" class="headerlink" title="SSL/TLS"></a>SSL/TLS</h3><p>SSL即安全套接层，处于OSI的第五层（会话层）他发展了v1，v2，v3版本，在v3时期改名叫TLS传输层安全</p>
+<h2 id="对称加密和非对称加密"><a href="#对称加密和非对称加密" class="headerlink" title="对称加密和非对称加密"></a>对称加密和非对称加密</h2><p><strong>对称加密</strong>指的是，加密和解密的时候使用同一个密钥，双方约定好同一个公钥。对称加密算法有AES和ChaCha20<br><strong>非对称加密</strong>有两个密钥，一个公钥，一个私钥，使用公钥加密后智能使用私钥来解密，使用私钥加密后只能用公钥来解密。非对称加密算法有：RSA，DSA等<br><strong>混合加密</strong>，这也是当前TLS采取的加密方式，结合了对称加密和非对称加密</p>
+<h3 id="混合加密的过程"><a href="#混合加密的过程" class="headerlink" title="混合加密的过程"></a>混合加密的过程</h3><ol>
+<li>客户端发送查询公钥的请求</li>
+<li>服务器返回公钥A给客户端</li>
+<li>客户端生成一个随机uid，生成两个随机字符串作为两个密钥，一个用于对称加密数据的密钥B，一个用于Mac生成的密钥C，密钥B是一个身份标识，uid和两个密钥是成对的</li>
+<li>客户端发生上面生成的两个密钥给服务端，这个请求的过程使用公钥加密</li>
+<li>服务器获取后通过私钥解密，获取之前生成的两个密钥、</li>
+<li>客户端正常发送请求，请求的内容通过密钥B对称加密，并附上Mac和Nonce</li>
+</ol>
+<ul>
+<li>Nonce是随机的字符串，用于防重放的验证，所以客户端每次请求都要随机生成一个新的Nonce</li>
+<li>Mac的计算规则，把请求中涉及的参数拼成一个大字符串，然后通过专门的Mac算法HMAC对其进行散列，得到一个Mac值，</li>
+</ul>
+<ol start="7">
+<li>服务器进行防重放验证，防篡改验证和解密请求</li>
+<li>服务器进行业务处理</li>
+<li>通过对称加密对响应内容进行加密并返回<h2 id="数字签名与证书"><a href="#数字签名与证书" class="headerlink" title="数字签名与证书"></a>数字签名与证书</h2><h3 id="摘要算法"><a href="#摘要算法" class="headerlink" title="摘要算法"></a>摘要算法</h3>摘要算法主要是为了保证数据的完整性，也就是常说的散列函数，哈希函数<br>把任意长度的数据加密压缩成固定长度，且独一无二的”摘要“字符串<h3 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h3>用于确认身份，使用私钥+摘要算法就能实现数字签名。<br>数字签名使用私钥加密，使用公钥解密，签名和公钥一样完全公开，任何人都可以获取，但是签名只有用私钥对应的公钥才能解开<br>CA是证书认证机构，把公钥，序列号，用途，颁发者，有效期等信息达成一个包再前面，证明与公钥关联的各种信息，形成数字证书<br>证书链，小一点的CA可以让大的CA签名认证，链条的最后是根证书<h2 id="TLS1-2的连接过程"><a href="#TLS1-2的连接过程" class="headerlink" title="TLS1.2的连接过程"></a>TLS1.2的连接过程</h2><h3 id="TLS协议的组成"><a href="#TLS协议的组成" class="headerlink" title="TLS协议的组成"></a>TLS协议的组成</h3>TLS包括几个子协议，比较常用的有记录协议、警报协议、握手协议、变更密码规范协议等</li>
+</ol>
+<p><strong>记录协议</strong>规定了TLS收发数据的基本单位：记录。所有其他子协议都需要通过记录协议发出。多个记录可以在同一个TCP包里一次性发出。<br><strong>警报协议</strong>的职责是向对方发出警报信息<br><strong>握手协议</strong>是TLS里最复杂的子协议，浏览器和服务器在握手过程中协商TLS版本号，随机数，密码套件等信息，然后交换证书和密钥参数，最终双方协商得到会话密钥，用于后续的混合加密系统<br><strong>变更密码规范协议</strong>通知对方，后续的数据都将使用密码加密保护</p>
+<h3 id="ECDHE握手过程"><a href="#ECDHE握手过程" class="headerlink" title="ECDHE握手过程"></a>ECDHE握手过程</h3><ol>
+<li>TCP建立连接之后，浏览器会收先发送一个”Clinet Hello“的消息，里面有客户端的版本号，支持的密码套件，还有一个随机数，用于生成会话密钥</li>
+<li>服务器收到消息后，会返回一个”Server Hello“的消息，把版本号对一下，也给出随机数，然后从客户端的密码套件列表中选一个作为本地通信使用的密码套件</li>
+<li>服务器为了证明自己的身份，把证书发给客户端</li>
+<li>发生证书后再发送”Server Key Exchange“消息，里面是椭圆曲线的公钥，用来实现密钥交换算法，再加上自己的私钥签名认证。</li>
+<li>服务器发送一个”Server Hello Done“表示服务器Hello完成</li>
+<li>这时服务器要走证书链逐级验证，确认证书的真实性，再用证书公钥验证前面，就确认了服务器的身份</li>
+<li>客户端安全密码套件的要求，生成一个公钥，用”Client Key Exchange“消息发给服务器，然后客户端和服务端都有密钥交换算法的参数，就是用ECDHE算法，算出”Pre-Master“，其实也是一个随机数，用Client Random，Server Random，Pre-Master生成一个用于加密会话的主密钥，交Master-Secret</li>
+<li>使用Master-Secret扩展出更多密钥，客户端发一个”Change Clipher Spec“，然后再发一个Finished消息，把之前所有发送的数据做个摘要，在加密一下，让服务器做个验证<h2 id="TLS1-3特性解析"><a href="#TLS1-3特性解析" class="headerlink" title="TLS1.3特性解析"></a>TLS1.3特性解析</h2>TLS1.3的改进目标是：兼容、安全与性能<h3 id="最大化兼容性"><a href="#最大化兼容性" class="headerlink" title="最大化兼容性"></a>最大化兼容性</h3>因为TLS1.3要保证广泛部署的”老设备“能够继续使用，所以保持现有的记录格式不变，通过”伪装“来实现兼容，使得TLS1.3看起来像TLS1.2<br>如何区别1.2和1.3？<br>这要用到一个新的<strong>扩展协议</strong>，通过在记录末尾添加一系列”扩展字段“来增加新的功能，老版本的TLS不认识他可以直接忽略，这就实现了”向后兼容“。<br>TLS1.3协议，握手的”Hello“消息后面就必须有”<strong>supported_versions</strong>“扩展，它标记了TLS的版本号，使用它就能区分新旧协议。<h3 id="强化安全"><a href="#强化安全" class="headerlink" title="强化安全"></a>强化安全</h3>TLS1.3里只保留了AES、ChaCha20对称加密算法，分组模式只能用AEAD和GCM、CCM和Poly1305，摘要算法只能用SHA256、SHA384，密钥交换算法只有ECDHE和DHE，椭圆曲线只保留五种<h3 id="提升性能"><a href="#提升性能" class="headerlink" title="提升性能"></a>提升性能</h3>HTTPS建立连接的时候要做TLS握手，在1.2中会多花两个消息往返2RTT，TLS1.3压缩了Hello协商过程，删除了Key Exchange消息，把握手时间减少到了1RTT<br>具体实现：<br>客户端在”Client Hello“消息里直接用”<strong>supported_groups</strong>“带上支持的曲线，用”<strong>Key_share</strong>“带上曲线对应的客户端公钥参数，用”<strong>signatrue_algorithms</strong>“带上签名算法<br>服务器收到这些扩展里选定一个曲线和参数，再用”Key_share“阔炸返回服务器这边的公钥参数，实现双方的密钥交换<br>TLS1.3还多了个安全强化措施，”Certificate Verify“消息，用服务器的私钥把前面的曲线、套件、参数等握手数据加了前面，作用和”Finished“消息差不多，由于是私钥前面，所以强化了身份认证和防篡改<h2 id="HTTPS的优化"><a href="#HTTPS的优化" class="headerlink" title="HTTPS的优化"></a>HTTPS的优化</h2>HTTPS比HTTP增加了一个TLS握手的步骤我，增加的消耗有：</li>
+</ol>
+<ul>
+<li>产合用于密钥交换的临时公私钥对</li>
+<li>验证证书时访问CA获取CEL或者OCSP</li>
+<li>非对称加密解密处理”Pre-Master“<h3 id="硬件优化"><a href="#硬件优化" class="headerlink" title="硬件优化"></a>硬件优化</h3>更快的CPU；选择使用SSL加速卡，让专门的硬件来做非对称加密解密，分担CPU的压力；SSL加速服务器，用专门的服务器集群来计算<h3 id="软件优化"><a href="#软件优化" class="headerlink" title="软件优化"></a>软件优化</h3>软件升级，协议优化<br>软件升级可以把Linux内核升级，Nginx升级，OpenSSL升级<br>协议优化尽量采用TLS1.3</li>
+</ul>
+<p><strong>证书优化</strong>，一个是证书传输，一个是证书验证<br><strong>会话复用</strong><br>和HTTP Cache一样，使用Session ID，下一次客户端发送请求过来的时候直接使用主密钥回复会话状态，跳过证书验证和密钥交换<br><strong>预共享密钥</strong></p>
+
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+    
+        <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+    
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/HTTPS/" rel="tag">HTTPS</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a>
+    
+</div>
+
+  
+      <div class="nexmoe-post-footer">
+          <section class="nexmoe-comment">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+<div id="gitalk"></div>
+<script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: '80b2453b6d5f37ad6225',
+        clientSecret: '43e99fa852795c9a7b3eb924b2558c64b84bbdeb',
+        id: window.location.pathname,
+        repo: 'nexmoe.github.io',
+        owner: 'nexmoe',
+        admin: 'nexmoe'
+    })
+    gitalk.render('gitalk')
+</script>
+</section>
+      </div>
+  
+</div>
+            <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="回到顶部" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

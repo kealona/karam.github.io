@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hans">
+
+<head>
+    
+    <title>HTTP协议学习 - Karam</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="HTTP是什么HTTP是超文本传输协议，把它拆分成三个部分，超文本，传输，协议。首先，HTTP是一个协议，是计算机的一种协议，使用计算机能够理解的语言确立了一种计算机之间的交流通信的规范，以及相关的各种控制和错误处理方式。其次，HTTP是一个传输协议，它的数据流动是双向的，有发送方和应答方方，通过HTTP可以传输各种数据，所以，HTTP是在计算机世界专门用来在两点之间传输数据的约定和规范。HTTP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP协议学习">
+<meta property="og:url" content="http://example.com/2022/07/06/HTTP%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0%EF%BC%881%EF%BC%89%E2%80%94%E2%80%94%E4%BB%80%E4%B9%88%E6%98%AFHTTP%EF%BC%9F/index.html">
+<meta property="og:site_name" content="Karam">
+<meta property="og:description" content="HTTP是什么HTTP是超文本传输协议，把它拆分成三个部分，超文本，传输，协议。首先，HTTP是一个协议，是计算机的一种协议，使用计算机能够理解的语言确立了一种计算机之间的交流通信的规范，以及相关的各种控制和错误处理方式。其次，HTTP是一个传输协议，它的数据流动是双向的，有发送方和应答方方，通过HTTP可以传输各种数据，所以，HTTP是在计算机世界专门用来在两点之间传输数据的约定和规范。HTTP">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-07-06T08:08:00.000Z">
+<meta property="article:modified_time" content="2022-07-07T01:53:09.196Z">
+<meta property="article:author" content="Karam">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="HTTP">
+<meta property="article:tag" content="cookie">
+<meta name="twitter:card" content="summary">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/highlight.js@9.15.8/styles/atom-one-dark.css,npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css,gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css,npm/hexo-theme-nexmoe@latest/source/lib/mdui_043tiny/css/mdui.css,npm/hexo-theme-nexmoe@latest/source/lib/iconfont/iconfont.css?v=233" crossorigin>
+    <link rel="stylesheet" href="/css/style.css?v=1658316801302">
+     
+    
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1658316801302">
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="mdui-drawer-body-left">
+    
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg)"></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Karam" class="mdui-btn mdui-btn-icon"><img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/avatar.png" alt="Karam"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Karam">
+            <img src="https://avatars.githubusercontent.com/u/71165769?v=4" alt="Karam" alt="Karam">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>Articles</span>68</div>
+        <div><span>Tags</span>50</div>
+        <div><span>Categories</span>14</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+    
+    <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:nexmoe.com" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="Search"></label>
+            </form>
+         
+    </div>
+</div>
+    
+    
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Categories</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/CSS/">CSS</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ES6/">ES6</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ElementUI源码/">ElementUI源码</a>
+          <span class="category-list-count">2</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/JavaScript/">JavaScript</a>
+          <span class="category-list-count">9</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Vue/">Vue</a>
+          <span class="category-list-count">7</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/npm/">npm</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/优化/">优化</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/客户端/">客户端</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/性能优化/">性能优化</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/操作系统/">操作系统</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/浏览器/">浏览器</a>
+          <span class="category-list-count">21</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/计算机网络/">计算机网络</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/项目复盘/">项目复盘</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/风格指南/">风格指南</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BFC/" style="font-size: 10px;">BFC</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Chrome/" style="font-size: 16.25px;">Chrome</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 11.25px;">ES6</a> <a href="/tags/Element/" style="font-size: 11.25px;">Element</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/JavaScript/" style="font-size: 18.75px;">JavaScript</a> <a href="/tags/JavaScript-%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">JavaScript 浏览器</a> <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/JavsScript/" style="font-size: 10px;">JavsScript</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/URL/" style="font-size: 10px;">URL</a> <a href="/tags/V8/" style="font-size: 12.5px;">V8</a> <a href="/tags/Vue/" style="font-size: 18.75px;">Vue</a> <a href="/tags/Vue-router/" style="font-size: 11.25px;">Vue-router</a> <a href="/tags/Vuex/" style="font-size: 10px;">Vuex</a> <a href="/tags/Vue%E6%BA%90%E7%A0%81/" style="font-size: 10px;">Vue源码</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 11.25px;">css</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">七层模型</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 16.25px;">优化</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/" style="font-size: 10px;">原型链</a> <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" style="font-size: 10px;">垃圾回收</a> <a href="/tags/%E5%AE%9A%E6%97%B6%E5%99%A8/" style="font-size: 10px;">定时器</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 11.25px;">实现</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/" style="font-size: 10px;">客户端存储</a> <a href="/tags/%E5%BC%82%E6%AD%A5/" style="font-size: 10px;">异步</a> <a href="/tags/%E5%BC%95%E6%93%8E/" style="font-size: 10px;">引擎</a> <a href="/tags/%E6%87%92%E5%8A%A0%E8%BD%BD/" style="font-size: 10px;">懒加载</a> <a href="/tags/%E6%89%8B%E5%86%99/" style="font-size: 10px;">手写</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 10px;">操作系统</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 20px;">浏览器</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">浏览器安全</a> <a href="/tags/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">混杂模式</a> <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 11.25px;">渲染</a> <a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 12.5px;">源码</a> <a href="/tags/%E7%BB%84%E4%BB%B6/" style="font-size: 11.25px;">组件</a> <a href="/tags/%E7%BB%84%E4%BB%B6%E5%8C%96/" style="font-size: 10px;">组件化</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 10px;">缓存</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" style="font-size: 10px;">编译器</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 17.5px;">计算机网络</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 15px;">计网</a> <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" style="font-size: 11.25px;">项目复盘</a> <a href="/tags/%E9%A6%96%E5%B1%8F%E6%97%B6%E9%97%B4/" style="font-size: 12.5px;">首屏时间</a>
+    </div>
+    
+  </div>
+
+    
+</aside>
+    <div class="nexmoe-copyright">
+        &copy; 2022 Karam
+        Powered by 
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+            <div class="nexmoe-post">
+
+  <article>
+      
+          <div class="nexmoe-post-cover" style="padding-bottom: 66.66666666666666%;"> 
+              <img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg" data-sizes="auto" alt="HTTP协议学习">
+              <h1>HTTP协议学习</h1>
+          </div>
+      
+      
+      <div class="nexmoe-post-meta nexmoe-rainbow" style="margin:10px 0!important;">
+    <a><i class="nexmoefont icon-calendar-fill"></i>2022年07月06日</a>
+    <a><i class="nexmoefont icon-areachart"></i>3.4k 字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>大概 14 分钟</a>
+</div>
+
+      
+
+      <h2 id="HTTP是什么"><a href="#HTTP是什么" class="headerlink" title="HTTP是什么"></a>HTTP是什么</h2><p>HTTP是超文本传输协议，把它拆分成三个部分，超文本，传输，协议。<br>首先，HTTP是一个协议，是计算机的一种协议，使用计算机能够理解的语言确立了一种计算机之间的交流通信的规范，以及相关的各种控制和错误处理方式。<br>其次，HTTP是一个传输协议，它的数据流动是双向的，有发送方和应答方方，通过HTTP可以传输各种数据，所以，<strong>HTTP是在计算机世界专门用来在两点之间传输数据的约定和规范</strong>。<br>HTTP是一种超文本传输协议，这里超文本就是超越文本的数据，所以*<em>HTTP是计算机世界里专门在两点之间传输文字，图片，视频，音频等文件数据的约定和规范</em>。*</p>
+<h2 id="七层模型和四层模型"><a href="#七层模型和四层模型" class="headerlink" title="七层模型和四层模型"></a>七层模型和四层模型</h2><h3 id="TCP-IP网络分层模型"><a href="#TCP-IP网络分层模型" class="headerlink" title="TCP/IP网络分层模型"></a>TCP/IP网络分层模型</h3><p>TCP/IP网络分层模型有四层，“从下往上”的层序是：</p>
+<p>第一层叫做“<strong>链路层</strong>”，负责以太网，WIFI这样的底层网络上发送的原始数据包，工作在网卡这个层次，使用MAC地址来标记网络上的设备</p>
+<p>第二层叫做“<strong>网际层</strong>”，在链路层的基础上，使用IP地址取代MAC地址，把局域网和广域网连接成一个大的虚拟网络，在网络里找设备的时候，只需要把IP地址翻译成MAC地址即可</p>
+<p>第三层叫做“<strong>传输层</strong>“，这个层次协议的职责是保证数据在IP地址标记的两点之间”可靠“的传输，是TCP，UDP协议工作的层次</p>
+<p>第四层叫做”<strong>应用层</strong>“，面向具体应用的协议，这一层的协议有HTTP，FTP，SSH，SMTP等</p>
+<p>MAC层的传输单位是帧，IP层的传输单位是包，TCP层的传输单位是段，HTTP的传输单位是消息或者报文</p>
+<h3 id="OSI网络分层模型"><a href="#OSI网络分层模型" class="headerlink" title="OSI网络分层模型"></a>OSI网络分层模型</h3><p>OSI全称为开放式系统互联通信参考模型，它从下到上分别是：</p>
+<ol>
+<li>第一层：物理层，信号的传输，通过物理介质传输比特流，常用设备有例如电缆，光纤，网卡，集线器等</li>
+<li>第二层：数据链路层，建立通信的时候需要经过建立通信联络和拆除通信联络的两个过程，把比特流转成“帧”的数据块进行传输，为了确保数据通信的准确，实现数据有效的差错检测，网络设备有网桥，交换机等</li>
+<li>第三层：网络层，通过IP寻址来建立两个节点之间的连接，负责对子网间的数据包进行路由选择，这层的协议有IP协议，ICPM协议，ARP协议，RARP协议</li>
+<li>第四层：传输层，传输层建立了主机端到端的连接，为上层协议提供可靠的端到端的传输数据服务，主要协议有TCP，UDP</li>
+<li>第五层：会话层，负责建立，管理和终止表示层实体之间的通信会话</li>
+<li>第六层：表示层，提供各种应用层数据的编码和转换功能，确保一个系统的应用层发送的数据能被另一个系统应用层识别 </li>
+<li>第七层：应用层，为用户提供各种网络服务，该层协议有HTTP，FTP，SMTP，POP3，DNS等</li>
+</ol>
+<h2 id="域名的解析"><a href="#域名的解析" class="headerlink" title="域名的解析"></a>域名的解析</h2><p>DNS的核心系统是一个三层的树状分布式服务，基本对应域名的结构：</p>
+<ol>
+<li>根域名服务器：管理顶级域名服务器，返回”com”,”net”,”cn”等顶级域名服务器的IP地址</li>
+<li>顶级域名服务器：管理各自域名下的权威域名服务器，比如com顶级域名服务器可以返回apple.com域名服务器的IP地址</li>
+<li>权威域名服务器：管理自己域名下主机的IP地址</li>
+</ol>
+<h2 id="HTTP的报文"><a href="#HTTP的报文" class="headerlink" title="HTTP的报文"></a>HTTP的报文</h2><h3 id="报文结构"><a href="#报文结构" class="headerlink" title="报文结构"></a>报文结构</h3><p>HTTP报文包括三个部分：起始行，首部，实体</p>
+<h3 id="请求行"><a href="#请求行" class="headerlink" title="请求行"></a>请求行</h3><p>请求行包括，协议版本，请求地址，请求方法<br>这三个部分通常使用空格来分分隔，最后使用CRLF换行表示结束</p>
+<h3 id="状态行"><a href="#状态行" class="headerlink" title="状态行"></a>状态行</h3><p>状态行包括协议版本，状态码，原因短语</p>
+<h3 id="头部字段"><a href="#头部字段" class="headerlink" title="头部字段"></a>头部字段</h3><p>头部字段以kv形式存在，最后使用CRLF换行表示结束</p>
+<h3 id="常用头字段"><a href="#常用头字段" class="headerlink" title="常用头字段"></a>常用头字段</h3><p>HTTP的头部字段可以分为四类：</p>
+<ol>
+<li>通用字段：在请求头和响应头里都可以出现</li>
+<li>请求字段：只能出现在请求头中</li>
+<li>响应字段：只能出现在响应头中</li>
+<li>实体字段：实际上属于通用字段<h2 id="HTTP的请求方法"><a href="#HTTP的请求方法" class="headerlink" title="HTTP的请求方法"></a>HTTP的请求方法</h2>HTTP1.1规定了八种方法：GET，POST，HEAD，PUT，DELETE，CONNECT，OPTIONS，TRACE<h3 id="GET-HEAD"><a href="#GET-HEAD" class="headerlink" title="GET/HEAD"></a>GET/HEAD</h3>GET请求的含义是从服务器获取资源，HEAD方法与GET方法类似，但是服务器不会返回请求的尸体数据，只会传响应头，通常用来检查服务器是否存在某个资源<h3 id="POST-PUT"><a href="#POST-PUT" class="headerlink" title="POST/PUT"></a>POST/PUT</h3>POST方法向服务器提交数据，PUT是修改服务器资源<h3 id="其他方法"><a href="#其他方法" class="headerlink" title="其他方法"></a>其他方法</h3></li>
+</ol>
+<p><strong>DELETE</strong>方法指示服务器删除资源<br><strong>CONNECT</strong>要求客户端和服务器建立连接<br><strong>OPTIONS</strong>方法要求服务器列出可对资源实行的操作方法，在响应头的Allow字段里返回<br><strong>TRACE</strong>用于对HTTP链路的测试和诊断，可以显示出请求-响应的传输路径</p>
+<h3 id="安全和幂等"><a href="#安全和幂等" class="headerlink" title="安全和幂等"></a>安全和幂等</h3><p>GET和HEAD方法是“安全”的，因为它们对资源只有“只读”操作，不会对服务器上的资源造成实质上的修改，GET和HEAD多次请求的结果一致，所以他是幂等的，POST请求的操作和结果不一致，所以是不幂等的，PUT请求的多次操作和结果一致，所以是幂等的</p>
+<h2 id="URL和URI"><a href="#URL和URI" class="headerlink" title="URL和URI"></a>URL和URI</h2><p>URL是统一资源定位符，URI是统一资源标识符</p>
+<h3 id="URI的格式"><a href="#URI的格式" class="headerlink" title="URI的格式"></a>URI的格式</h3><p>scheme://host:port path ?query<br>上面就是URI的基本组成，scheme就是协议，host为资源所在主机名，port为资源所在主机的端口号，path为资源所在的目录，query为查询字符串<br>w<br>URI的完整格式为<br>scheme://user:password@host:port path ?query#fragment<br>user:password@为登录信息，#fragement为片段标识符，URI定位的资源内部的一个锚点或者标签</p>
+<h2 id="响应状态码"><a href="#响应状态码" class="headerlink" title="响应状态码"></a>响应状态码</h2><p>状态行由协议版本，状态码，原因短语组成</p>
+<h3 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h3><p>状态码分为5类，具体含义是：</p>
+<ul>
+<li>1xx:提示信息，表示目前是协议处理的中间状态，还需要后续的操作</li>
+<li>2XX：成功，报文意见收到并被正确处理</li>
+<li>3XX：重定向，资源位置发生变动，需要客户端重新发送请求</li>
+<li>4XX：客户端错误，请求报文有误，服务器无法处理</li>
+<li>5XX：服务器错误，服务器在处理请求时内部发生了错误</li>
+</ul>
+<h4 id="1XX"><a href="#1XX" class="headerlink" title="1XX"></a>1XX</h4><p>1XX是提示信息类的状态码，当前处于协议处理的中间状态，比较常见的状态码是101 Switching Protocols，意思为客户都安使用Upgrade头字段，要求在HTTP协议的基础上改成其他的协议继续通信</p>
+<h4 id="2XX"><a href="#2XX" class="headerlink" title="2XX"></a>2XX</h4><p>2XX是成功，服务器接收请求并正确处理<br>“<strong>200 OK</strong>“表示一切正常<br>“<strong>204 No Content</strong>“表示请求成功但是响应头后没有body数据<br>“<strong>206 Parial Content</strong>“当用户在使用分块传输的时候，返回body里的数据是资源的一部分</p>
+<h4 id="3XX"><a href="#3XX" class="headerlink" title="3XX"></a>3XX</h4><p>3XX是重定向，客户端请求的资源发生了变动，必须用新的URI重新发送请求获取资源<br>“<strong>301 Moved Permanently</strong>”永久性重定向，<br>“<strong>302 Found</strong>”临时性重定向，也会给一个地址重定向，但是不是永久性的<br>在Location字段中指明资源的新地址<br>“<strong>304 Not Modified</strong>”表示资源未修改，用户缓存控制，缓存重定向</p>
+<h4 id="4XX"><a href="#4XX" class="headerlink" title="4XX"></a>4XX</h4><p>4XX表示客户端发送的请求报文有无，服务器无法处理<br>“<strong>400 Bad Request</strong>”表示请求报文有错误，但没有明确的含义<br>“<strong>403 Forbidden</strong>”表示服务器禁止访问资源<br>“<strong>404 Not Found</strong>”资源在本服务器上未找到</p>
+<ul>
+<li>405 Method Not Allowed：不允许使用某些方法操作资源</li>
+<li>406 Not Acceptable：资源无法满足客户端请求的条件</li>
+<li>408 Request Timeout请求超时</li>
+<li>409 Conflict：多个请求发生冲突</li>
+<li>413 Request Entity Too Large：请求报文里的body太大</li>
+<li>414 Request-URI Too Long：请求行里的URI太大</li>
+<li>429 Too Many Requests：客户都安发送了太多的请求</li>
+<li>431 Request Header Fileds Too Large：请求头中的某个字段胡总和总体太大<h4 id="5XX"><a href="#5XX" class="headerlink" title="5XX"></a>5XX</h4>5XX代表服务器错误，服务器内部处理发生了错误<br>“<strong>500 Internal Server Error</strong>”通用错误码，没有具体错误<br>“<strong>501 Not Implemented</strong>”表示客户端请求的功能还不支持<br>“<strong>502 Bad Gateway</strong>”通常是服务器作为网关或者代理时返回的错误码，表示服务器自身工作正常，访问后端服务器时发生了错误<br>“<strong>503 Service Unavailable</strong>”表示服务器当前很忙，暂时无法响应服务<h2 id="HTTP有哪些特点"><a href="#HTTP有哪些特点" class="headerlink" title="HTTP有哪些特点"></a>HTTP有哪些特点</h2><h3 id="灵活可扩展"><a href="#灵活可扩展" class="headerlink" title="灵活可扩展"></a>灵活可扩展</h3>HTTP的body可以传输图片，音频，视频等任意数据<h3 id="可靠传输"><a href="#可靠传输" class="headerlink" title="可靠传输"></a>可靠传输</h3>因为HTTP时基于TCP协议的，所以也是可靠的传输协议<h3 id="请求-应答"><a href="#请求-应答" class="headerlink" title="请求-应答"></a>请求-应答</h3>HTTP的通信模式是请求-应答，通俗来讲就是“一发一收”，请求方法请求，接收方响应<h3 id="无状态"><a href="#无状态" class="headerlink" title="无状态"></a>无状态</h3>HTTP的收发报文都是相互独立的，没有任何联系，收发报文也不会对客户端或服务器产生任何影响，连接后也不会保存任何信息<h2 id="HTTP有哪些优点？有哪些缺点？"><a href="#HTTP有哪些优点？有哪些缺点？" class="headerlink" title="HTTP有哪些优点？有哪些缺点？"></a>HTTP有哪些优点？有哪些缺点？</h2>HTTP的优点有，简单，灵活可扩展，跨语言，跨平台，所以应用广泛<br>无状态即是优点也是缺点，优点是不需要额外的资源来记录状态信息，减轻服务器的负担；缺点是不支持连续多个步骤的“事务”操作，所以引进了cookie技术，作为服务器对客户端的标识<br>缺点：明文传输，数据会被暴露，容易被窥探信息<br>HTTP性能的问题，因为请求应答的模式，导致队头阻塞等等问题<h2 id="HTTP的实体数据"><a href="#HTTP的实体数据" class="headerlink" title="HTTP的实体数据"></a>HTTP的实体数据</h2><h3 id="数据类型与编码"><a href="#数据类型与编码" class="headerlink" title="数据类型与编码"></a>数据类型与编码</h3>HTTP使用MIME type来标记body中俄的数据类型。其中，HTTP经常遇到的MIME类型为：</li>
+<li>text：文本格式可读数据，text/html，text/plain,text/css</li>
+<li>image：即图像文件，有image/jpg,image/jpeg,image/png等</li>
+<li>audio/video：音频和视频数据，如audio/mpeg,video/mp4等</li>
+<li>application：数据格式不固定，application/json,application/javascript等<br>除了数据类型，有时候数据会被压缩，所以还有编码类型，编码类型通常只有三种：</li>
+</ul>
+<ol>
+<li>gzip：GNU zip压缩格式</li>
+<li>deflate：zlib压缩格式</li>
+<li>br：专门为HTTP优化的新压缩算法<h3 id="数据类型使用的头字段"><a href="#数据类型使用的头字段" class="headerlink" title="数据类型使用的头字段"></a>数据类型使用的头字段</h3>HTTP协议定义了两个字段进行客户端和服务器的“内容协商”，Accept请求头字段，Content实体头字段，客户端用Accept告诉服务器希望接收什么样的数据，服务器使用Content告诉客户端实际发了什么样的数据<h3 id="语言类型与编码"><a href="#语言类型与编码" class="headerlink" title="语言类型与编码"></a>语言类型与编码</h3>Accept-Language客户端可理解的自然语言，Content-Language是服务器告知客户端实际发送的语言类型<h3 id="内容协商的质量值"><a href="#内容协商的质量值" class="headerlink" title="内容协商的质量值"></a>内容协商的质量值</h3>Accept这类请求头中可以使用q参数表示权重来设置优先级<br>权重值最大为，最小为0.01，默认值是1，0表示拒绝<br>服务器使用Vary字段记录服务器在进行内容协商的时候参考的请求头字段<h2 id="HTTP传输大文件的方法"><a href="#HTTP传输大文件的方法" class="headerlink" title="HTTP传输大文件的方法"></a>HTTP传输大文件的方法</h2><h3 id="数据压缩"><a href="#数据压缩" class="headerlink" title="数据压缩"></a>数据压缩</h3>Accept-Encoding是浏览器支持的压缩方式，Content-Encoding是实际服务器压缩的方式<h3 id="分块传输"><a href="#分块传输" class="headerlink" title="分块传输"></a>分块传输</h3>在响应报文里用头字段”<strong>Transfer-Encoding：chunked</strong>“来表示，body部分是分块发送的，这个字段和Content-Length是互斥的<br>分块传输的规则：</li>
+<li>每个分块包含两个部分，一个是分块的长度，一个是数据块</li>
+<li>长度头是以CRLF结尾的一行明文，用16进制数字表示长度</li>
+<li>数据块紧跟在长度后面，最后也以CRLF结尾</li>
+<li>最后用一个长度为0的块表示结束<h3 id="范围请求"><a href="#范围请求" class="headerlink" title="范围请求"></a>范围请求</h3>范围请求允许客户端在请求头里使用专用字段来表示只获取文件的一部分，服务器使用Accept-Ranges:bytes告知客户端，是否支持范围请求，如果服务器不支持，那只能将数据整块发送<br>客户端使用Range来表示自己请求的数据范围<h3 id="多段数据"><a href="#多段数据" class="headerlink" title="多段数据"></a>多段数据</h3>特殊的MIME类型：<strong>multipart/byteranges</strong>，表示报文的body是由多段字节序列组成的，并且还要用一个参数”<strong>boundary=xxx</strong>“给段之间的分隔标记<h2 id="HTTP的连接管理"><a href="#HTTP的连接管理" class="headerlink" title="HTTP的连接管理"></a>HTTP的连接管理</h2>因为HTTP短连接，导致每次请求都需要先建立连接，当请求频繁的时候，就会消耗无意义的时间。<h3 id="长连接"><a href="#长连接" class="headerlink" title="长连接"></a>长连接</h3>HTTP1.1提出了持续连接，使用长连接在请求头中添加Connection:keep-alive，如果服务器支持长连接，就会在响应里发送Connection:keep-alive，客户端可以在Connection:close来关闭连接<h2 id="Cookie机制"><a href="#Cookie机制" class="headerlink" title="Cookie机制"></a>Cookie机制</h2><h3 id="Cookie的属性"><a href="#Cookie的属性" class="headerlink" title="Cookie的属性"></a>Cookie的属性</h3>可以设置Expire和Max-Age来设置Cookie的有效期，这两者可以同时出现，浏览器会优先采用Max-Age来计算失效期<br>Cookie可以通过设置HttpOnly，sameSite，Secure</li>
+</ol>
+
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+    
+        <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+    
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/HTTP/" rel="tag">HTTP</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/cookie/" rel="tag">cookie</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a>
+    
+</div>
+
+  
+      <div class="nexmoe-post-footer">
+          <section class="nexmoe-comment">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+<div id="gitalk"></div>
+<script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: '80b2453b6d5f37ad6225',
+        clientSecret: '43e99fa852795c9a7b3eb924b2558c64b84bbdeb',
+        id: window.location.pathname,
+        repo: 'nexmoe.github.io',
+        owner: 'nexmoe',
+        admin: 'nexmoe'
+    })
+    gitalk.render('gitalk')
+</script>
+</section>
+      </div>
+  
+</div>
+            <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="回到顶部" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

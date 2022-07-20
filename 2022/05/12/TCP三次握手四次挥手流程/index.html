@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hans">
+
+<head>
+    
+    <title>TCP三次握手四次挥手流程 - Karam</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="三次握手和四次挥手的示意图 为什么连接需要是三次握手TCP建立连接时需要三次握手，发送三个报文，三次握手的作用是保证发送方和接收方的收发能力正常，指定自己的初始化序列号为后面的可靠性传输做准备，实质上连接服务器端口，并同步链接双方的序列号和确认号，交换TCOP窗口大小信息刚开始的时候客户端处于CLOSED状态，服务器端处于LISTEN状态第一次握手:客户端发送SYN报文段，指明客户端的初始化序列号">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP三次握手四次挥手流程">
+<meta property="og:url" content="http://example.com/2022/05/12/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Karam">
+<meta property="og:description" content="三次握手和四次挥手的示意图 为什么连接需要是三次握手TCP建立连接时需要三次握手，发送三个报文，三次握手的作用是保证发送方和接收方的收发能力正常，指定自己的初始化序列号为后面的可靠性传输做准备，实质上连接服务器端口，并同步链接双方的序列号和确认号，交换TCOP窗口大小信息刚开始的时候客户端处于CLOSED状态，服务器端处于LISTEN状态第一次握手:客户端发送SYN报文段，指明客户端的初始化序列号">
+<meta property="og:locale">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/31cc2e9ee0424b3595c6a7512c8cc097.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20689ae9be4042db9aa497025915bc21.png">
+<meta property="article:published_time" content="2022-05-12T04:17:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T07:17:22.187Z">
+<meta property="article:author" content="Karam">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="TCP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/31cc2e9ee0424b3595c6a7512c8cc097.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/highlight.js@9.15.8/styles/atom-one-dark.css,npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css,gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css,npm/hexo-theme-nexmoe@latest/source/lib/mdui_043tiny/css/mdui.css,npm/hexo-theme-nexmoe@latest/source/lib/iconfont/iconfont.css?v=233" crossorigin>
+    <link rel="stylesheet" href="/css/style.css?v=1658316801305">
+     
+    
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1658316801305">
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="mdui-drawer-body-left">
+    
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg)"></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Karam" class="mdui-btn mdui-btn-icon"><img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/avatar.png" alt="Karam"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Karam">
+            <img src="https://avatars.githubusercontent.com/u/71165769?v=4" alt="Karam" alt="Karam">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>Articles</span>68</div>
+        <div><span>Tags</span>50</div>
+        <div><span>Categories</span>14</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+    
+    <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:nexmoe.com" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="Search"></label>
+            </form>
+         
+    </div>
+</div>
+    
+    
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Categories</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/CSS/">CSS</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ES6/">ES6</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ElementUI源码/">ElementUI源码</a>
+          <span class="category-list-count">2</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/JavaScript/">JavaScript</a>
+          <span class="category-list-count">9</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Vue/">Vue</a>
+          <span class="category-list-count">7</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/npm/">npm</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/优化/">优化</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/客户端/">客户端</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/性能优化/">性能优化</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/操作系统/">操作系统</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/浏览器/">浏览器</a>
+          <span class="category-list-count">21</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/计算机网络/">计算机网络</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/项目复盘/">项目复盘</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/风格指南/">风格指南</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BFC/" style="font-size: 10px;">BFC</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Chrome/" style="font-size: 16.25px;">Chrome</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 11.25px;">ES6</a> <a href="/tags/Element/" style="font-size: 11.25px;">Element</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/JavaScript/" style="font-size: 18.75px;">JavaScript</a> <a href="/tags/JavaScript-%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">JavaScript 浏览器</a> <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/JavsScript/" style="font-size: 10px;">JavsScript</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/URL/" style="font-size: 10px;">URL</a> <a href="/tags/V8/" style="font-size: 12.5px;">V8</a> <a href="/tags/Vue/" style="font-size: 18.75px;">Vue</a> <a href="/tags/Vue-router/" style="font-size: 11.25px;">Vue-router</a> <a href="/tags/Vuex/" style="font-size: 10px;">Vuex</a> <a href="/tags/Vue%E6%BA%90%E7%A0%81/" style="font-size: 10px;">Vue源码</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 11.25px;">css</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">七层模型</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 16.25px;">优化</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/" style="font-size: 10px;">原型链</a> <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" style="font-size: 10px;">垃圾回收</a> <a href="/tags/%E5%AE%9A%E6%97%B6%E5%99%A8/" style="font-size: 10px;">定时器</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 11.25px;">实现</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/" style="font-size: 10px;">客户端存储</a> <a href="/tags/%E5%BC%82%E6%AD%A5/" style="font-size: 10px;">异步</a> <a href="/tags/%E5%BC%95%E6%93%8E/" style="font-size: 10px;">引擎</a> <a href="/tags/%E6%87%92%E5%8A%A0%E8%BD%BD/" style="font-size: 10px;">懒加载</a> <a href="/tags/%E6%89%8B%E5%86%99/" style="font-size: 10px;">手写</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 10px;">操作系统</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 20px;">浏览器</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">浏览器安全</a> <a href="/tags/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">混杂模式</a> <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 11.25px;">渲染</a> <a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 12.5px;">源码</a> <a href="/tags/%E7%BB%84%E4%BB%B6/" style="font-size: 11.25px;">组件</a> <a href="/tags/%E7%BB%84%E4%BB%B6%E5%8C%96/" style="font-size: 10px;">组件化</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 10px;">缓存</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" style="font-size: 10px;">编译器</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 17.5px;">计算机网络</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 15px;">计网</a> <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" style="font-size: 11.25px;">项目复盘</a> <a href="/tags/%E9%A6%96%E5%B1%8F%E6%97%B6%E9%97%B4/" style="font-size: 12.5px;">首屏时间</a>
+    </div>
+    
+  </div>
+
+    
+</aside>
+    <div class="nexmoe-copyright">
+        &copy; 2022 Karam
+        Powered by 
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+            <div class="nexmoe-post">
+
+  <article>
+      
+          <div class="nexmoe-post-cover" style="padding-bottom: 66.66666666666666%;"> 
+              <img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg" data-sizes="auto" alt="TCP三次握手四次挥手流程">
+              <h1>TCP三次握手四次挥手流程</h1>
+          </div>
+      
+      
+      <div class="nexmoe-post-meta nexmoe-rainbow" style="margin:10px 0!important;">
+    <a><i class="nexmoefont icon-calendar-fill"></i>2022年05月12日</a>
+    <a><i class="nexmoefont icon-areachart"></i>1.1k 字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>大概 4 分钟</a>
+</div>
+
+      
+
+      <h2 id="三次握手和四次挥手的示意图"><a href="#三次握手和四次挥手的示意图" class="headerlink" title="三次握手和四次挥手的示意图"></a>三次握手和四次挥手的示意图</h2><p><img src="https://img-blog.csdnimg.cn/31cc2e9ee0424b3595c6a7512c8cc097.png"><br><img src="https://img-blog.csdnimg.cn/20689ae9be4042db9aa497025915bc21.png"></p>
+<h2 id="为什么连接需要是三次握手"><a href="#为什么连接需要是三次握手" class="headerlink" title="为什么连接需要是三次握手"></a>为什么连接需要是三次握手</h2><p>TCP建立连接时需要三次握手，发送三个报文，三次握手的作用是保证发送方和接收方的收发能力正常，指定自己的初始化序列号为后面的可靠性传输做准备，实质上连接服务器端口，并同步链接双方的序列号和确认号，交换TCOP窗口大小信息<br>刚开始的时候客户端处于CLOSED状态，服务器端处于LISTEN状态<br><strong>第一次握手</strong>:客户端发送SYN报文段，指明客户端的初始化序列号seq，此刻客户端处于SYN_SENT状态<br><strong>第二次握手</strong>：服务器收到来自客户端的SYN报文后，状态转为SYN_REVD状态，向服务器发送一个SYNACK报文段，并指定服务器的初始化序列号，把客户端的初始化序列号+1作为ACK的值，表示确认收到了客户端的SYN报文段，此时客户端处于ESTABLISHED状态<br><strong>第三次握手</strong>：客户端收到SYNACK报文段后，把服务器的初始化序号+1作为ACK的值返回，服务器收到后状态也转为ESTABLISHED，此时双方已建立连接</p>
+<h3 id="为什么需要三次握手而不是两次"><a href="#为什么需要三次握手而不是两次" class="headerlink" title="为什么需要三次握手而不是两次"></a>为什么需要三次握手而不是两次</h3><p>第一次握手的目的是确定客户端的发送能力正常，服务器的接收能力正常<br>第二次握手的目的是确定服务器的发送能力正常<br>第三次握手的目的是确定客户端的接收能力正常<br>如果只有两次握手，那么客户端的接收能力无法保证正常</p>
+<h2 id="什么是半连接队列"><a href="#什么是半连接队列" class="headerlink" title="什么是半连接队列"></a>什么是半连接队列</h2><p>服务器第一次收到客户端的SYN报文段后会进入SYN_RCVD状态，这时，还没有完全建立连接，服务器会把这种状态下的请求放入队列中，把这个没有完全建立连接的队列叫做半连接队列</p>
+<h2 id="ISN（初始化序列号）是固定的吗"><a href="#ISN（初始化序列号）是固定的吗" class="headerlink" title="ISN（初始化序列号）是固定的吗"></a>ISN（初始化序列号）是固定的吗</h2><p>不是固定的，ISN是随时间变化的</p>
+<h2 id="三次握手中可以携带数据吗"><a href="#三次握手中可以携带数据吗" class="headerlink" title="三次握手中可以携带数据吗"></a>三次握手中可以携带数据吗</h2><p>第一次和第二次握手不可以携带数据，第三次握手可以携带数据</p>
+<h2 id="SYN攻击是什么"><a href="#SYN攻击是什么" class="headerlink" title="SYN攻击是什么"></a>SYN攻击是什么</h2><p>攻击者向服务器发送大量的SYN报文段，使服务器生成大量的半连接状态的连接在队列中，这些连接占用队列导致正常的SYN报文因为队列溢出而被丢弃<br><strong>如何预防：</strong></p>
+<ol>
+<li>缩短SYN的超时时间</li>
+<li>使用SYN cookie</li>
+<li>减少重发次数以增加半连接队列堆积</li>
+<li>过滤网关防护<h1 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h1>一开始双方都处于ESTABLISHED状态</li>
+</ol>
+<p><strong>第一次挥手：</strong>客户端发起FIN报文，报文中会指定以一个序列号，此时客户端处于FIN_WAIT1状态，发出连接释放的报文段(FIN=1,seq=M)，并停止发送数据，主动关闭TCP连接，进入FIN_WAIT1状态，等待服务器确认<br><strong>第二次挥手：</strong>服务器端收到FIN以后，会发送ACK报文，并且把客户端的序列号值+1作为ACK报文的序列号值，表明已经收到了客户端的报文此时服务器已经进入CLOSE_WAIT状态，服务器发送确认报文(ACK = 1, ack = M+1)，TCP进入半关闭状态，客户端到服务器端的连接释放，客户端收到服务器端的确认后，进入FIN_WAIT2状态，等待服务器发送连接释放的报文段<br><strong>第三次挥手：</strong>服务器发送FIN报文，且指定序列号，服务器进入LAST_ACK状态，等待客户端确认，客户端进入TIME_WAIT状态<br><strong>第四次挥手：</strong>客户端接收到FIN报文后，发送一个ACK报文作为应答，且服务器的序列号值+1作为ACK报文的值，然后过一段时间（等待2MSL）客户端进入CLOSED状态，服务器收到ACK报文后，关闭连接，进入CLOSED状态</p>
+<h2 id="挥手为什么需要四次"><a href="#挥手为什么需要四次" class="headerlink" title="挥手为什么需要四次"></a>挥手为什么需要四次</h2><p>因为服务器需要等待服务器端所有的报文都发送完毕才能确保关闭连接，所以需要四次挥手</p>
+<h2 id="四次挥手释放连接时，等待2MSL有什么意义"><a href="#四次挥手释放连接时，等待2MSL有什么意义" class="headerlink" title="四次挥手释放连接时，等待2MSL有什么意义"></a>四次挥手释放连接时，等待2MSL有什么意义</h2><p>防止TCP再次发送ACK报文被丢弃，因为如果不设置2MSL的话，一旦ACK报文丢失，服务器端就无法正常关闭连接，</p>
+
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+    
+        <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+    
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/TCP/" rel="tag">TCP</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a>
+    
+</div>
+
+  
+      <div class="nexmoe-post-footer">
+          <section class="nexmoe-comment">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+<div id="gitalk"></div>
+<script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: '80b2453b6d5f37ad6225',
+        clientSecret: '43e99fa852795c9a7b3eb924b2558c64b84bbdeb',
+        id: window.location.pathname,
+        repo: 'nexmoe.github.io',
+        owner: 'nexmoe',
+        admin: 'nexmoe'
+    })
+    gitalk.render('gitalk')
+</script>
+</section>
+      </div>
+  
+</div>
+            <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="回到顶部" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
