@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hans">
+
+<head>
+    
+    <title>组件封装——Dialog组件 - Karam</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="Dialog组件一、Dialog需求分析 点击后打开对话框，关闭对话框 对话框嵌套 溢出滚动 loading 自定义内容 自定义头部 自定义底部 自定义主题内容   标题，内容 事件回调  二、API设计Attributes   属性 说明    title 对话框的标题，如果使用slot定义了内容头，这个属性无效   content 对话框内容，如果使用slot定义了内容主题，这个属性无效">
+<meta property="og:type" content="article">
+<meta property="og:title" content="组件封装——Dialog组件">
+<meta property="og:url" content="http://example.com/2022/04/16/%E7%BB%84%E4%BB%B6%E5%B0%81%E8%A3%85%E2%80%94%E2%80%94Dialog%E7%BB%84%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Karam">
+<meta property="og:description" content="Dialog组件一、Dialog需求分析 点击后打开对话框，关闭对话框 对话框嵌套 溢出滚动 loading 自定义内容 自定义头部 自定义底部 自定义主题内容   标题，内容 事件回调  二、API设计Attributes   属性 说明    title 对话框的标题，如果使用slot定义了内容头，这个属性无效   content 对话框内容，如果使用slot定义了内容主题，这个属性无效">
+<meta property="og:locale">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/704f2394a7e9471abac07fd23128c8cc.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/5c72f207e0264260bfc3496d4ab64fc1.png">
+<meta property="article:published_time" content="2022-04-16T11:22:00.000Z">
+<meta property="article:modified_time" content="2022-08-17T02:54:00.907Z">
+<meta property="article:author" content="Karam">
+<meta property="article:tag" content="组件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/704f2394a7e9471abac07fd23128c8cc.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/highlight.js@9.15.8/styles/atom-one-dark.css,npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css,gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css,npm/hexo-theme-nexmoe@latest/source/lib/mdui_043tiny/css/mdui.css,npm/hexo-theme-nexmoe@latest/source/lib/iconfont/iconfont.css?v=233" crossorigin>
+    <link rel="stylesheet" href="/css/style.css?v=1661341672505">
+     
+    
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1661341672505">
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="mdui-drawer-body-left">
+    
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg)"></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Karam" class="mdui-btn mdui-btn-icon"><img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/avatar.png" alt="Karam"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Karam">
+            <img src="https://avatars.githubusercontent.com/u/71165769?v=4" alt="Karam" alt="Karam">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>Articles</span>71</div>
+        <div><span>Tags</span>52</div>
+        <div><span>Categories</span>15</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+    
+    <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:nexmoe.com" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="Search"></label>
+            </form>
+         
+    </div>
+</div>
+    
+    
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Categories</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/CSS/">CSS</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ES6/">ES6</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/ElementUI源码/">ElementUI源码</a>
+          <span class="category-list-count">2</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/JavaScript/">JavaScript</a>
+          <span class="category-list-count">9</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Vue/">Vue</a>
+          <span class="category-list-count">7</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/npm/">npm</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/优化/">优化</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/客户端/">客户端</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/性能优化/">性能优化</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/操作系统/">操作系统</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/浏览器/">浏览器</a>
+          <span class="category-list-count">21</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/组件/">组件</a>
+          <span class="category-list-count">2</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/计算机网络/">计算机网络</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/项目复盘/">项目复盘</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/风格指南/">风格指南</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+    
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BFC/" style="font-size: 10px;">BFC</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Chrome/" style="font-size: 16.25px;">Chrome</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 11.25px;">ES6</a> <a href="/tags/Element/" style="font-size: 11.25px;">Element</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/JavaScript/" style="font-size: 18.75px;">JavaScript</a> <a href="/tags/JavaScript-%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">JavaScript 浏览器</a> <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/JavsScript/" style="font-size: 10px;">JavsScript</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/URL/" style="font-size: 10px;">URL</a> <a href="/tags/V8/" style="font-size: 12.5px;">V8</a> <a href="/tags/Vue/" style="font-size: 18.75px;">Vue</a> <a href="/tags/Vue-router/" style="font-size: 11.25px;">Vue-router</a> <a href="/tags/Vuex/" style="font-size: 10px;">Vuex</a> <a href="/tags/Vue%E6%BA%90%E7%A0%81/" style="font-size: 10px;">Vue源码</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 11.25px;">css</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/transition/" style="font-size: 10px;">transition</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">七层模型</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 17.5px;">优化</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/" style="font-size: 10px;">原型链</a> <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" style="font-size: 10px;">垃圾回收</a> <a href="/tags/%E5%AE%9A%E6%97%B6%E5%99%A8/" style="font-size: 10px;">定时器</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 11.25px;">实现</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/" style="font-size: 10px;">客户端存储</a> <a href="/tags/%E5%BC%82%E6%AD%A5/" style="font-size: 10px;">异步</a> <a href="/tags/%E5%BC%95%E6%93%8E/" style="font-size: 10px;">引擎</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 10px;">性能</a> <a href="/tags/%E6%87%92%E5%8A%A0%E8%BD%BD/" style="font-size: 10px;">懒加载</a> <a href="/tags/%E6%89%8B%E5%86%99/" style="font-size: 10px;">手写</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 10px;">操作系统</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 20px;">浏览器</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">浏览器安全</a> <a href="/tags/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">混杂模式</a> <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 11.25px;">渲染</a> <a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 12.5px;">源码</a> <a href="/tags/%E7%BB%84%E4%BB%B6/" style="font-size: 13.75px;">组件</a> <a href="/tags/%E7%BB%84%E4%BB%B6%E5%8C%96/" style="font-size: 10px;">组件化</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 10px;">缓存</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" style="font-size: 10px;">编译器</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 17.5px;">计算机网络</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 15px;">计网</a> <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" style="font-size: 11.25px;">项目复盘</a> <a href="/tags/%E9%A6%96%E5%B1%8F%E6%97%B6%E9%97%B4/" style="font-size: 12.5px;">首屏时间</a>
+    </div>
+    
+  </div>
+
+    
+</aside>
+    <div class="nexmoe-copyright">
+        &copy; 2022 Karam
+        Powered by 
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+            <div class="nexmoe-post">
+
+  <article>
+      
+          <div class="nexmoe-post-cover" style="padding-bottom: 66.66666666666666%;"> 
+              <img src="https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/cover/5c3aec85a4343.jpg" data-sizes="auto" alt="组件封装——Dialog组件">
+              <h1>组件封装——Dialog组件</h1>
+          </div>
+      
+      
+      <div class="nexmoe-post-meta nexmoe-rainbow" style="margin:10px 0!important;">
+    <a><i class="nexmoefont icon-calendar-fill"></i>2022年04月16日</a>
+    <a><i class="nexmoefont icon-areachart"></i>668 字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>大概 3 分钟</a>
+</div>
+
+      
+
+      <h1 id="Dialog组件"><a href="#Dialog组件" class="headerlink" title="Dialog组件"></a>Dialog组件</h1><h2 id="一、Dialog需求分析"><a href="#一、Dialog需求分析" class="headerlink" title="一、Dialog需求分析"></a>一、Dialog需求分析</h2><ul>
+<li>点击后打开对话框，关闭对话框</li>
+<li>对话框嵌套</li>
+<li>溢出滚动</li>
+<li>loading</li>
+<li>自定义内容<ul>
+<li>自定义头部</li>
+<li>自定义底部</li>
+<li>自定义主题内容</li>
+</ul>
+</li>
+<li>标题，内容</li>
+<li>事件回调</li>
+</ul>
+<h2 id="二、API设计"><a href="#二、API设计" class="headerlink" title="二、API设计"></a>二、API设计</h2><h3 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h3><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>title</td>
+<td>对话框的标题，如果使用slot定义了内容头，这个属性无效</td>
+</tr>
+<tr>
+<td>content</td>
+<td>对话框内容，如果使用slot定义了内容主题，这个属性无效</td>
+</tr>
+<tr>
+<td>visible</td>
+<td>对话框是否可见，默认值为false</td>
+</tr>
+<tr>
+<td>loading</td>
+<td>对话框是否在加载中，设置后，需要手动设置visible关闭对话框，默认值为false</td>
+</tr>
+<tr>
+<td>width</td>
+<td>对话框的宽度，默认为50%</td>
+</tr>
+<tr>
+<td>append-to-body</td>
+<td>是否嵌套，默认值为false</td>
+</tr>
+</tbody></table>
+<h3 id="Slot"><a href="#Slot" class="headerlink" title="Slot"></a>Slot</h3><table>
+<thead>
+<tr>
+<th>name</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-</td>
+<td>Dialog主体内容</td>
+</tr>
+<tr>
+<td>title</td>
+<td>Dialog标题区内容</td>
+</tr>
+<tr>
+<td>footer</td>
+<td>Dialog按钮操作区内容</td>
+</tr>
+</tbody></table>
+<h3 id="Events"><a href="#Events" class="headerlink" title="Events"></a>Events</h3><table>
+<thead>
+<tr>
+<th>事件名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>open</td>
+<td>Dialog打开的回调</td>
+</tr>
+<tr>
+<td>close</td>
+<td>Dialog关闭的回调</td>
+</tr>
+</tbody></table>
+<h2 id="三、代码编写"><a href="#三、代码编写" class="headerlink" title="三、代码编写"></a>三、代码编写</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">	&lt;div class=&quot;dialog-container&quot; v-show=&quot;visible&quot; @click.self=&quot;closeDialog&quot;&gt;</span><br><span class="line">		&lt;div class=&quot;dialog-box&quot; :style=&quot;&#x27;width: &#x27; + width&quot;&gt;</span><br><span class="line">			&lt;div class=&quot;dialog-header&quot;&gt;</span><br><span class="line">				&lt;slot name=&quot;title&quot;&gt;</span><br><span class="line">					&lt;span class=&quot;dialog-header__title&quot;&gt;</span><br><span class="line">						&#123;&#123; title &#125;&#125;</span><br><span class="line">					&lt;/span&gt;</span><br><span class="line">					&lt;span class=&quot;dialog-header__closebtn&quot; @click=&quot;closeDialog&quot;&gt;×&lt;/span&gt;</span><br><span class="line">				&lt;/slot&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">			</span><br><span class="line">			&lt;div class=&quot;dialog-content&quot;&gt;</span><br><span class="line">				&lt;slot&gt;&#123;&#123; content &#125;&#125;&lt;/slot&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">			&lt;div class=&quot;dialog-footer&quot;&gt;</span><br><span class="line">				&lt;slot name=&quot;footer&quot;&gt;&lt;/slot&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">	export default &#123;</span><br><span class="line">		name: &#x27;dialog&#x27;,</span><br><span class="line">		props: &#123;</span><br><span class="line">			title: &#123;</span><br><span class="line">				type: String,</span><br><span class="line">				required: true</span><br><span class="line">			&#125;,</span><br><span class="line">			content: &#123;</span><br><span class="line">				type: String</span><br><span class="line">			&#125;,</span><br><span class="line">			visible: &#123;</span><br><span class="line">				type: Boolean,</span><br><span class="line">				required: true</span><br><span class="line">			&#125;,</span><br><span class="line">			loading: &#123;</span><br><span class="line">				type: Boolean,</span><br><span class="line">				default: false</span><br><span class="line">			&#125;,</span><br><span class="line">			width: &#123;</span><br><span class="line">				type: String,</span><br><span class="line">				default: &#x27;50%&#x27;</span><br><span class="line">			&#125;,</span><br><span class="line">			appendToBody: &#123;</span><br><span class="line">				type: Boolean,</span><br><span class="line">				default: false</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		mounted() &#123;</span><br><span class="line">			if(this.appendToBody) &#123;</span><br><span class="line">				document.body.appendChild(this.$el)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		watch: &#123;</span><br><span class="line">			visible(val) &#123;</span><br><span class="line">				if(val) &#123;</span><br><span class="line">					this.$emit(&#x27;open&#x27;)</span><br><span class="line">					if(this.appendToBody) &#123;</span><br><span class="line">						document.body.appendChild(this.$el)</span><br><span class="line">					&#125;</span><br><span class="line">				&#125; else &#123;</span><br><span class="line">					this.$emit(&#x27;close&#x27;)</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		methods: &#123;</span><br><span class="line">			closeDialog() &#123;</span><br><span class="line">				this.$emit(&#x27;update:visible&#x27;, false)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		destroyed() &#123;</span><br><span class="line">			if(this.appendToBody &amp;&amp; this.$el &amp;&amp; this.$el.parentNode) &#123;</span><br><span class="line">				this.$el.parentNode.removeChild(this.$el);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped=&quot;scoped&quot;&gt;</span><br><span class="line">	.dialog-container &#123;</span><br><span class="line">		width: 100%;</span><br><span class="line">		height: 100%;</span><br><span class="line">		position: fixed;</span><br><span class="line">		top: 0;</span><br><span class="line">		display: flex;</span><br><span class="line">		justify-content: center;</span><br><span class="line">		align-items: center;</span><br><span class="line">		background-color: rgba(33, 33, 33, .5);</span><br><span class="line">		color: rgb(0, 0, 0, .87);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.dialog-box &#123;</span><br><span class="line">		background-color: #fff;</span><br><span class="line">		width: 50%;</span><br><span class="line">		border-radius: 6px;</span><br><span class="line">		box-shadow: 0 11px 15px -7px rgb(0 0 0 / 20%), 0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%);</span><br><span class="line">		max-height: 90%;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.dialog-header__closebtn &#123;</span><br><span class="line">		float: right;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.dialog-header__closebtn:hover &#123;</span><br><span class="line">		color: #5C91ED;</span><br><span class="line">		cursor: pointer;</span><br><span class="line">		transition: all .15s ease;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.dialog-header &#123;</span><br><span class="line">		height: 30px;</span><br><span class="line">		line-height: 30px;</span><br><span class="line">		padding: 15px 15px 10px;</span><br><span class="line">		font-size: 18px;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.dialog-content &#123;</span><br><span class="line">		padding: 15px;</span><br><span class="line">		overflow-y: scroll;</span><br><span class="line">		max-height: 70vh;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.dialog-footer &#123;</span><br><span class="line">		padding: 10px 15px 15px;</span><br><span class="line">		text-align: right;</span><br><span class="line">	&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="四、结果展示"><a href="#四、结果展示" class="headerlink" title="四、结果展示"></a>四、结果展示</h2><p><img src="https://img-blog.csdnimg.cn/704f2394a7e9471abac07fd23128c8cc.png"><br><img src="https://img-blog.csdnimg.cn/5c72f207e0264260bfc3496d4ab64fc1.png"></p>
+
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+    
+        <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E7%BB%84%E4%BB%B6/">组件</a>
+    
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E7%BB%84%E4%BB%B6/" rel="tag">组件</a>
+    
+</div>
+
+  
+      <div class="nexmoe-post-footer">
+          <section class="nexmoe-comment">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+<div id="gitalk"></div>
+<script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: '80b2453b6d5f37ad6225',
+        clientSecret: '43e99fa852795c9a7b3eb924b2558c64b84bbdeb',
+        id: window.location.pathname,
+        repo: 'nexmoe.github.io',
+        owner: 'nexmoe',
+        admin: 'nexmoe'
+    })
+    gitalk.render('gitalk')
+</script>
+</section>
+      </div>
+  
+</div>
+            <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="回到顶部" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
